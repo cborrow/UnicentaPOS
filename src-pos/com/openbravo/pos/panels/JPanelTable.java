@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (c) 2009-2011 uniCenta
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta & previous Openbravo POS works
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -19,27 +19,18 @@
 
 package com.openbravo.pos.panels;
 
-import java.awt.*;
-import javax.swing.*;
-import com.openbravo.pos.forms.JPanelView;
-import com.openbravo.pos.forms.AppView;
-import com.openbravo.pos.forms.AppLocal;
-import com.openbravo.data.loader.Vectorer;
 import com.openbravo.basic.BasicException;
-import com.openbravo.data.gui.JSaver;
-import com.openbravo.data.gui.MessageInf;
-import com.openbravo.data.gui.JCounter;
-import com.openbravo.data.gui.JLabelDirty;
-import com.openbravo.data.gui.JListNavigator;
-import com.openbravo.data.gui.JNavigator;
+import com.openbravo.data.gui.*;
 import com.openbravo.data.loader.ComparatorCreator;
-import com.openbravo.data.user.BrowsableEditableData;
-import com.openbravo.data.user.DirtyManager;
-import com.openbravo.data.user.EditorRecord;
-import com.openbravo.data.user.ListProvider;
-import com.openbravo.data.user.SaveProvider;
-import com.openbravo.pos.forms.BeanFactoryApp;
-import com.openbravo.pos.forms.BeanFactoryException;
+import com.openbravo.data.loader.Vectorer;
+import com.openbravo.data.user.*;
+import com.openbravo.pos.customers.CustomerInfoGlobal;
+import com.openbravo.pos.forms.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.ListCellRenderer;
 
 /**
  *
@@ -47,8 +38,19 @@ import com.openbravo.pos.forms.BeanFactoryException;
  */
 public abstract class JPanelTable extends JPanel implements JPanelView, BeanFactoryApp {
     
+    /**
+     *
+     */
     protected BrowsableEditableData bd;    
+
+    /**
+     *
+     */
     protected DirtyManager dirty;    
+
+    /**
+     *
+     */
     protected AppView app;
     
     /** Creates new form JPanelTableEditor */
@@ -57,6 +59,12 @@ public abstract class JPanelTable extends JPanel implements JPanelView, BeanFact
         initComponents();
     }
     
+    /**
+     *
+     * @param app
+     * @throws BeanFactoryException
+     */
+    @Override
     public void init(AppView app) throws BeanFactoryException {
         
         this.app = app;
@@ -66,10 +74,18 @@ public abstract class JPanelTable extends JPanel implements JPanelView, BeanFact
         init();
     }
 
+    /**
+     *
+     * @return
+     */
+    @Override
     public Object getBean() {
         return this;
     }
     
+    /**
+     *
+     */
     protected void startNavigation() {
         
         if (bd == null) {
@@ -96,7 +112,9 @@ public abstract class JPanelTable extends JPanel implements JPanelView, BeanFact
             if (cr != null) {
                 JListNavigator nl = new JListNavigator(bd);
                 nl.applyComponentOrientation(getComponentOrientation());
-                if (cr != null) nl.setCellRenderer(cr);
+                if (cr != null) {
+                    nl.setCellRenderer(cr);
+                }
                 container.add(nl, java.awt.BorderLayout.LINE_START);
             }
 
@@ -123,43 +141,99 @@ public abstract class JPanelTable extends JPanel implements JPanelView, BeanFact
         }
     }
     
+    /**
+     *
+     * @return
+     */
     public Component getToolbarExtras() {
         return null;
     }
 
+    /**
+     *
+     * @return
+     */
     public Component getFilter() {    
         return null;
     }
     
+    /**
+     *
+     */
     protected abstract void init();
     
+    /**
+     *
+     * @return
+     */
     public abstract EditorRecord getEditor();
     
+    /**
+     *
+     * @return
+     */
     public abstract ListProvider getListProvider();
     
+    /**
+     *
+     * @return
+     */
     public abstract SaveProvider getSaveProvider();
     
+    /**
+     *
+     * @return
+     */
     public Vectorer getVectorer() {
         return null;
     }
     
+    /**
+     *
+     * @return
+     */
     public ComparatorCreator getComparatorCreator() {
         return null;
     }
     
+    /**
+     *
+     * @return
+     */
     public ListCellRenderer getListCellRenderer() {
         return null;
     }
 
+    /**
+     *
+     * @return
+     */
+    @Override
     public JComponent getComponent() {
         return this;
     }
 
+    /**
+     *
+     * @throws BasicException
+     */
+    @Override
     public void activate() throws BasicException {
         startNavigation();
         bd.actionLoad();
+        
+        //HS insert new customer 20.03.2014
+        if (CustomerInfoGlobal.getInstance()!=null){
+            bd.actionInsert();
     }    
     
+    }
+
+    /**
+     *
+     * @return
+     */
+    @Override
     public boolean deactivate() {
 
         try {
@@ -185,6 +259,7 @@ public abstract class JPanelTable extends JPanel implements JPanelView, BeanFact
         setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
         setLayout(new java.awt.BorderLayout());
 
+        container.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         container.setLayout(new java.awt.BorderLayout());
         container.add(toolbar, java.awt.BorderLayout.NORTH);
 

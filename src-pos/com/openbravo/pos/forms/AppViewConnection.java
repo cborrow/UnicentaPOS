@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (c) 2009-2011 uniCenta
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta & previous Openbravo POS works
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -19,6 +19,9 @@
 
 package com.openbravo.pos.forms;
 
+import com.openbravo.basic.BasicException;
+import com.openbravo.data.loader.Session;
+import com.openbravo.pos.util.AltEncrypter;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -26,9 +29,6 @@ import java.net.URLClassLoader;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import com.openbravo.basic.BasicException;
-import com.openbravo.data.loader.Session;
-import com.openbravo.pos.util.AltEncrypter;
 
 /**
  *
@@ -40,6 +40,12 @@ public class AppViewConnection {
     private AppViewConnection() {
     }
     
+    /**
+     *
+     * @param props
+     * @return
+     * @throws BasicException
+     */
     public static Session createSession(AppProperties props) throws BasicException {
                
         try{
@@ -59,17 +65,11 @@ public class AppViewConnection {
                 AltEncrypter cypher = new AltEncrypter("cypherkey" + sDBUser);
                 sDBPassword = cypher.decrypt(sDBPassword.substring(6));
             }   
-
              return new Session(props.getProperty("db.URL"), sDBUser,sDBPassword);     
 
-        } catch (InstantiationException e) {
+// JG 16 May use multicatch
+        } catch (InstantiationException | IllegalAccessException | MalformedURLException | ClassNotFoundException e) {
             throw new BasicException(AppLocal.getIntString("message.databasedrivererror"), e);
-        } catch (IllegalAccessException eIA) {
-            throw new BasicException(AppLocal.getIntString("message.databasedrivererror"), eIA);
-        } catch (MalformedURLException eMURL) {
-            throw new BasicException(AppLocal.getIntString("message.databasedrivererror"), eMURL);
-        } catch (ClassNotFoundException eCNF) {
-            throw new BasicException(AppLocal.getIntString("message.databasedrivererror"), eCNF);
         } catch (SQLException eSQL) {
             throw new BasicException(AppLocal.getIntString("message.databaseconnectionerror"), eSQL);
         }   

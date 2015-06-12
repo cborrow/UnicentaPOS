@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (c) 2009-2011 uniCenta
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -27,18 +27,24 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.text.JTextComponent;
 import com.openbravo.pos.forms.AppLocal;
 
+/**
+ *
+ * @author JG uniCenta
+ */
 public class DirectoryEvent implements ActionListener {
     
     private JTextComponent m_jTxtField;
     private JFileChooser m_fc;
     
-    /** Creates a new instance of DirectoryChooser */
+    /** Creates a new instance of DirectoryChooser
+     * @param TxtField */
     public DirectoryEvent(JTextComponent TxtField) {
         m_jTxtField = TxtField;
         m_fc = new JFileChooser();
         
         m_fc.resetChoosableFileFilters();
         m_fc.addChoosableFileFilter(new FileFilter() {
+            @Override
             public boolean accept(File f) {
                 if (f.isDirectory()) {
                     return true;
@@ -50,6 +56,7 @@ public class DirectoryEvent implements ActionListener {
                         || filename.endsWith(".ZIP");
                 }
             }
+            @Override
             public String getDescription() {
                 return AppLocal.getIntString("filter.dbdriverlib");
             }
@@ -57,6 +64,7 @@ public class DirectoryEvent implements ActionListener {
         m_fc.setFileSelectionMode(JFileChooser.FILES_ONLY );
     }
        
+    @Override
     public void actionPerformed(ActionEvent actionEvent) {
         
         m_fc.setCurrentDirectory(new File(m_jTxtField.getText()));      

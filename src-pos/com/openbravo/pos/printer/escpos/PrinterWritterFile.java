@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (c) 2009-2011 uniCenta
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta & previous Openbravo POS works
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -19,18 +19,33 @@
 
 package com.openbravo.pos.printer.escpos;
 
-import java.io.*;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 
+/**
+ *
+ * @author JG uniCenta
+ */
 public class PrinterWritterFile extends PrinterWritter {
     
     private String m_sFilePrinter;
     private OutputStream m_out;
     
+    /**
+     *
+     * @param sFilePrinter
+     */
     public PrinterWritterFile(String sFilePrinter) {
         m_sFilePrinter = sFilePrinter;
         m_out = null;
-    }  
-    
+    }
+
+    /**
+     *
+     * @param data
+     */
+    @Override
     protected void internalWrite(byte[] data) {
         try {  
             if (m_out == null) {
@@ -42,6 +57,10 @@ public class PrinterWritterFile extends PrinterWritter {
         }    
     }
     
+    /**
+     *
+     */
+    @Override
     protected void internalFlush() {
         try {  
             if (m_out != null) {
@@ -54,6 +73,10 @@ public class PrinterWritterFile extends PrinterWritter {
         }    
     }
     
+    /**
+     *
+     */
+    @Override
     protected void internalClose() {
         try {  
             if (m_out != null) {

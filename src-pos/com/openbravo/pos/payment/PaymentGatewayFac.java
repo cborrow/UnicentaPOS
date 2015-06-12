@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (C) 2008-2009 Openbravo, S.L.
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (C) 2008-2014 Openbravo, S.L.
+//    http://www.unicenta.com - additional amends by Walter Wojick for Blue Pay
 //
 //    This file is part of uniCenta oPOS
 //
@@ -19,34 +19,48 @@
 
 package com.openbravo.pos.payment;
 
-import com.openbravo.pos.forms.*;
+import com.openbravo.pos.forms.AppProperties;
 
+/**
+ *
+ * @author JG uniCenta
+ */
 public class PaymentGatewayFac {
     
     /** Creates a new instance of PaymentGatewayFac */
     private PaymentGatewayFac() {
     }
     
+    /**
+     *
+     * @param props
+     * @return
+     */
     public static PaymentGateway getPaymentGateway(AppProperties props) {
         
         String sReader = props.getProperty("payment.gateway");
-
-        if ("external".equals(sReader)) {
-            return new PaymentGatewayExt();
-        } else if ("PayPoint / SecPay".equals(sReader)) {
-            return new PaymentGatewayPayPoint(props);
-        } else if ("AuthorizeNet".equals(sReader)) {
-            return new PaymentGatewayAuthorizeNet(props);
-        } else if ("La Caixa (Spain)".equals(sReader)) {
-            return new PaymentGatewayCaixa(props);
-        } else if ("Planetauthorize".equals(sReader)) {
-            return new PaymentGatewayPlanetauthorize(props);
-        } else if ("Firs Data / LinkPoint / YourPay".equals(sReader)) {
-            return new PaymentGatewayLinkPoint(props);
-        } else if ("PaymentsGateway.net".equals(sReader)) {
-            return new PaymentGatewayPGNET(props);
-        } else {
-            return null;
+// JG 16 May 12 use switch
+        switch (sReader) {
+            case "external":
+                return new PaymentGatewayExt();
+            case "PayPoint / SecPay":
+                return new PaymentGatewayPayPoint(props);
+            case "AuthorizeNet":
+                return new PaymentGatewayAuthorizeNet(props);
+            case "BluePay AUTH.NET EMU":
+                return new PaymentGatewayBluePayAUTHNETEMU(props);
+            case "BluePay 2.0 POST":
+                return new PaymentGatewayBluePay20POST(props);
+            case "La Caixa (Spain)":
+                return new PaymentGatewayCaixa(props);
+            case "Planetauthorize":
+                return new PaymentGatewayPlanetauthorize(props);
+            case "First Data / LinkPoint / YourPay":
+                return new PaymentGatewayLinkPoint(props);
+            case "PaymentsGateway.net":
+                return new PaymentGatewayPGNET(props);
+            default:
+                return null;
         }
     }      
 }

@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (c) 2009-2011 uniCenta
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta & previous Openbravo POS works
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -19,10 +19,10 @@
 
 package com.openbravo.data.gui;
 
-import javax.swing.*;
-import java.util.*;
 import com.openbravo.data.loader.IKeyGetter;
 import com.openbravo.data.loader.KeyGetterBuilder;
+import java.util.*;
+import javax.swing.*;
 
 /**
  *
@@ -34,35 +34,76 @@ public class ComboBoxValModel extends AbstractListModel implements ComboBoxModel
     private IKeyGetter m_keygetter;
     private Object m_selected;
     
-    /** Creates a new instance of ComboBoxValModel */
+    /** Creates a new instance of ComboBoxValModel
+     * @param aData
+     * @param keygetter */
     public ComboBoxValModel(List aData, IKeyGetter keygetter) {
         m_aData = aData;
         m_keygetter = keygetter;
         m_selected = null;
     }
+
+    /**
+     *
+     * @param aData
+     */
     public ComboBoxValModel(List aData) {
         this(aData, KeyGetterBuilder.INSTANCE);
     }
+
+    /**
+     *
+     * @param keygetter
+     */
     public ComboBoxValModel(IKeyGetter keygetter) {
         this(new ArrayList(), keygetter);
     }
+
+    /**
+     *
+     */
     public ComboBoxValModel() {
         this(new ArrayList(), KeyGetterBuilder.INSTANCE);
     }
     
+    /**
+     *
+     * @param c
+     */
     public void add(Object c) {
         m_aData.add(c);
     }
 
+    /**
+     *
+     * @param c
+     */
+    public void del(Object c) {
+        m_aData.remove(c);
+    }
+
+    /**
+     *
+     * @param index
+     * @param c
+     */
     public void add(int index, Object c) {
         m_aData.add(index, c);
     }
     
+    /**
+     *
+     * @param aData
+     */
     public void refresh(List aData) {
         m_aData = aData;
         m_selected = null;
     }
     
+    /**
+     *
+     * @return
+     */
     public Object getSelectedKey() {
         if (m_selected == null) {
             return null;
@@ -71,6 +112,10 @@ public class ComboBoxValModel extends AbstractListModel implements ComboBoxModel
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public String getSelectedText() {
         if (m_selected == null) {
             return null;
@@ -79,14 +124,26 @@ public class ComboBoxValModel extends AbstractListModel implements ComboBoxModel
         }
     }
     
+    /**
+     *
+     * @param aKey
+     */
     public void setSelectedKey(Object aKey) {
         setSelectedItem(getElementByKey(aKey));
     }
     
+    /**
+     *
+     */
     public void setSelectedFirst() {
-        m_selected = (m_aData.size() == 0) ? null : m_aData.get(0);
+        m_selected = (m_aData.isEmpty()) ? null : m_aData.get(0);
     }
     
+    /**
+     *
+     * @param aKey
+     * @return
+     */
     public Object getElementByKey(Object aKey) {
         if (aKey != null) {
             Iterator it = m_aData.iterator();
@@ -100,18 +157,22 @@ public class ComboBoxValModel extends AbstractListModel implements ComboBoxModel
         return null;
     }
     
+    @Override
     public Object getElementAt(int index) {
         return m_aData.get(index);
     }
     
+    @Override
     public Object getSelectedItem() {
         return m_selected;
     }
     
+    @Override
     public int getSize() {
         return m_aData.size();
     }
     
+    @Override
     public void setSelectedItem(Object anItem) {
         
         if ((m_selected != null && !m_selected.equals(anItem)) || m_selected == null && anItem != null) {

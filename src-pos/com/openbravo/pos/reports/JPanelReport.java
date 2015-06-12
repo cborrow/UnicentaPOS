@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (c) 2009-2011 uniCenta
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta & previous Openbravo POS works
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -19,38 +19,55 @@
 
 package com.openbravo.pos.reports;
 
-import java.awt.*;
-import javax.swing.*;
-import java.util.*;
-import java.io.*;
-
-import com.openbravo.pos.forms.JPanelView;
-import com.openbravo.pos.forms.AppView;
-import com.openbravo.pos.forms.AppLocal;
-
-import net.sf.jasperreports.engine.*;
-import net.sf.jasperreports.engine.xml.JRXmlLoader;
-import net.sf.jasperreports.engine.design.*;
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.gui.MessageInf;
 import com.openbravo.data.loader.BaseSentence;
 import com.openbravo.data.loader.SentenceList;
+import com.openbravo.data.loader.Session;
 import com.openbravo.data.user.EditorCreator;
-import com.openbravo.pos.forms.BeanFactoryApp;
-import com.openbravo.pos.forms.BeanFactoryException;
-import com.openbravo.pos.forms.DataLogicSales;
+import com.openbravo.pos.forms.*;
 import com.openbravo.pos.sales.TaxesLogic;
 import com.openbravo.pos.util.JRViewer300;
+import java.awt.BorderLayout;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.sql.Connection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.engine.xml.JRXmlLoader;
 
+/**
+ *
+ * @author JG uniCenta
+ */
 public abstract class JPanelReport extends JPanel implements JPanelView, BeanFactoryApp   {
     
     private JRViewer300 reportviewer = null;   
     private JasperReport jr = null;
     private EditorCreator editor = null;
             
+    /**
+     *
+     */
     protected AppView m_App;
-    
+    private Session s;
+    private Connection con;
+
+    /**
+     *
+     */
     protected SentenceList taxsent;
+  
+    /**
+     *
+     */
     protected TaxesLogic taxeslogic;
 
     /** Creates new form JPanelReport */
@@ -59,9 +76,16 @@ public abstract class JPanelReport extends JPanel implements JPanelView, BeanFac
         initComponents();      
     }
     
+    /**
+     *
+     * @param app
+     * @throws BeanFactoryException
+     */
+    @Override
     public void init(AppView app) throws BeanFactoryException {   
         
         m_App = app;
+        
         DataLogicSales dlSales = (DataLogicSales) app.getBean("com.openbravo.pos.forms.DataLogicSales");
         taxsent = dlSales.getTaxList();
         
@@ -82,50 +106,103 @@ public abstract class JPanelReport extends JPanel implements JPanelView, BeanFac
                 JasperDesign jd = JRXmlLoader.load(getClass().getResourceAsStream(getReport() + ".jrxml"));            
                 jr = JasperCompileManager.compileReport(jd);    
             } else {
-                // read the compiled report
-                ObjectInputStream oin = new ObjectInputStream(in);
-                jr = (JasperReport) oin.readObject();
-                oin.close();
+// JG 16 May 12 use try-with-resources
+                try (ObjectInputStream oin = new ObjectInputStream(in)) {
+                    jr = (JasperReport) oin.readObject();
+                }
             }
-        } catch (Exception e) {
+// JG 16 May 12 use multicatch
+        } catch (JRException | IOException | ClassNotFoundException e) {
             MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.cannotloadreport"), e);
             msg.show(this);
             jr = null;
         }  
     }
     
+    /**
+     *
+     * @return
+     */
+    @Override
     public Object getBean() {
         return this;
     }
     
+    /**
+     *
+     * @return
+     */
     protected abstract String getReport();
+
+    /**
+     *
+     * @return
+     */
     protected abstract String getResourceBundle();
+
+    /**
+     *
+     * @return
+     */
     protected abstract BaseSentence getSentence();
+
+    /**
+     *
+     * @return
+     */
     protected abstract ReportFields getReportFields();
+
+    /**
+     *
+     * @return
+     */
     protected EditorCreator getEditorCreator() {
         return null;
     }
     
+    /**
+     *
+     * @return
+     */
+    @Override
     public JComponent getComponent() {
         return this;
     }
     
+    /**
+     *
+     * @throws BasicException
+     */
+    @Override
     public void activate() throws BasicException {
 
         setVisibleFilter(true);
         taxeslogic = new TaxesLogic(taxsent.list()); 
-    }    
-    
+    }
+
+    /**
+     *
+     * @return
+     */
+    @Override
     public boolean deactivate() {    
         
         reportviewer.loadJasperPrint(null);
         return true;
     }
     
+    /**
+     *
+     * @param value
+     */
     protected void setVisibleButtonFilter(boolean value) {
         jToggleFilter.setVisible(value);
     }
     
+    /**
+     *
+     * @param value
+     */
     protected void setVisibleFilter(boolean value) {
         jToggleFilter.setSelected(value);
         jToggleFilterActionPerformed(null);
@@ -189,6 +266,7 @@ public abstract class JPanelReport extends JPanel implements JPanelView, BeanFac
         jButton1 = new javax.swing.JButton();
 
         setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         setLayout(new java.awt.BorderLayout());
 
         jPanelHeader.setLayout(new java.awt.BorderLayout());
@@ -209,6 +287,7 @@ public abstract class JPanelReport extends JPanel implements JPanelView, BeanFac
         });
         jPanel1.add(jToggleFilter);
 
+        jButton1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/ok.png"))); // NOI18N
         jButton1.setText(AppLocal.getIntString("Button.ExecuteReport")); // NOI18N
         jButton1.setToolTipText("Execute Report");

@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (C) 2008-2009 Openbravo, S.L.
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta & previous Openbravo POS works
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -20,11 +20,7 @@
 package com.openbravo.pos.inventory;
 
 import com.openbravo.data.loader.Datas;
-import com.openbravo.data.model.Column;
-import com.openbravo.data.model.Field;
-import com.openbravo.data.model.PrimaryKey;
-import com.openbravo.data.model.Row;
-import com.openbravo.data.model.Table;
+import com.openbravo.data.model.*;
 import com.openbravo.data.user.EditorRecord;
 import com.openbravo.format.Formats;
 import com.openbravo.pos.forms.AppLocal;
@@ -40,8 +36,12 @@ public class AttributesPanel extends JPanelTable2 {
 
     /** Creates a new instance of JPanelCategories */
     public AttributesPanel() {        
-    }   
-    
+    }
+
+    /**
+     *
+     */
+    @Override
     protected void init() {          
         
         row = new Row(
@@ -58,12 +58,22 @@ public class AttributesPanel extends JPanelTable2 {
         spr = row.getSaveProvider(app.getSession(), table);        
         
         editor = new AttributesEditor(dirty);    
-    } 
-    
+    }
+
+    /**
+     *
+     * @return
+     */
+    @Override
     public EditorRecord getEditor() {
         return editor;
-    }  
-    
+    }
+
+    /**
+     *
+     * @return
+     */
+    @Override
     public String getTitle() {
         return AppLocal.getIntString("Menu.Attributes");
     }        

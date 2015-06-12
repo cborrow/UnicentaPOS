@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (C) 2008-2009 Openbravo, S.L.
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta & previous Openbravo POS works
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -20,17 +20,19 @@
 package com.openbravo.pos.forms;
 
 import com.openbravo.data.loader.LocalRes;
+import com.openbravo.pos.ticket.UserInfo;
+import com.openbravo.pos.util.Hashcypher;
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.Icon;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import com.openbravo.pos.ticket.UserInfo;
-import com.openbravo.pos.util.Hashcypher;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -42,17 +44,17 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class AppUser {
 
-    private static Logger logger = Logger.getLogger("com.openbravo.pos.forms.AppUser");
+    private static final Logger logger = Logger.getLogger("com.openbravo.pos.forms.AppUser");
 
     private static SAXParser m_sp = null;
     private static HashMap<String, String> m_oldclasses; // This is for backwards compatibility purposes
     
-    private String m_sId;
-    private String m_sName;
-    private String m_sCard;
+    private final String m_sId;
+    private final String m_sName;
+    private final String m_sCard;
     private String m_sPassword;
-    private String m_sRole;
-    private Icon m_Icon;
+    private final String m_sRole;
+    private final Icon m_Icon;
     
     private Set<String> m_apermissions;
     
@@ -60,7 +62,13 @@ public class AppUser {
         initOldClasses();
     }
     
-    /** Creates a new instance of AppUser */
+    /** Creates a new instance of AppUser
+     * @param id
+     * @param name
+     * @param card
+     * @param password
+     * @param icon
+     * @param role */
     public AppUser(String id, String name, String password, String card, String role, Icon icon) {
         m_sId = id;
         m_sName = name;
@@ -71,45 +79,87 @@ public class AppUser {
         m_apermissions = null;
     }
     
+    /**
+     *
+     * @return
+     */
     public Icon getIcon() {
         return m_Icon;
     }
     
+    /**
+     *
+     * @return
+     */
     public String getId() {
         return m_sId;
-    }    
-    
+    }
+
+    /**
+     *
+     * @return
+     */
     public String getName() {
         return m_sName;
     }
     
+    /**
+     *
+     * @param sValue
+     */
     public void setPassword(String sValue) {
         m_sPassword = sValue;
     }
     
+    /**
+     *
+     * @return
+     */
     public String getPassword() {
         return m_sPassword;
     }
     
+    /**
+     *
+     * @return
+     */
     public String getRole() {
         return m_sRole;
     }
     
+    /**
+     *
+     * @return
+     */
     public String getCard() {
         return m_sCard;
     }
     
+    /**
+     *
+     * @return
+     */
     public boolean authenticate() {
         return m_sPassword == null || m_sPassword.equals("") || m_sPassword.startsWith("empty:");
     }
+
+    /**
+     *
+     * @param sPwd
+     * @return
+     */
     public boolean authenticate(String sPwd) {
         return Hashcypher.authenticate(sPwd, m_sPassword);
     }
     
+    /**
+     *
+     * @param dlSystem
+     */
     public void fillPermissions(DataLogicSystem dlSystem) {
         
-        // inicializamos los permisos
-        m_apermissions = new HashSet<String>();
+        // JG 16 May use diamond inference
+        m_apermissions = new HashSet<>();
         // Y lo que todos tienen permisos
         m_apermissions.add("com.openbravo.pos.forms.JPanelMenu");
         m_apermissions.add("Menu.Exit");        
@@ -135,11 +185,20 @@ public class AppUser {
 
     }
     
+    /**
+     *
+     * @param classname
+     * @return
+     */
     public boolean hasPermission(String classname) {
 
         return (m_apermissions == null) ? false : m_apermissions.contains(classname);        
-    }   
-    
+    }
+
+    /**
+     *
+     * @return
+     */
     public UserInfo getUserInfo() {
         return new UserInfo(m_sId, m_sName);
     }
@@ -152,7 +211,8 @@ public class AppUser {
     }
     
     private static void initOldClasses() {
-        m_oldclasses = new HashMap<String, String>();
+        // JG 16 May use diamond inference       
+        m_oldclasses = new HashMap<>();
         
         // update permissions from 0.0.24 to 2.20    
         m_oldclasses.put("net.adrianromero.tpv.panelsales.JPanelTicketSales", "com.openbravo.pos.sales.JPanelTicketSales");

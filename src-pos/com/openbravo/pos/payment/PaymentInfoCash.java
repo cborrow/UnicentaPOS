@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
 //    Copyright (C) 2008-2009 Openbravo, S.L.
-//    http://www.unicenta.net/unicentaopos
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -16,43 +16,158 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with uniCenta oPOS.  If not, see <http://www.gnu.org/licenses/>.
-
 package com.openbravo.pos.payment;
 
 import com.openbravo.format.Formats;
 
+/**
+ *
+ * @author JG uniCenta
+ */
 public class PaymentInfoCash extends PaymentInfo {
-    
+
+    private double prePayAmount = 0.0;
     private double m_dPaid;
     private double m_dTotal;
+    private double m_dTendered;
+    private String m_dCardName =null;
     
-    /** Creates a new instance of PaymentInfoCash */
-    public PaymentInfoCash(double dTotal, double dPaid) {
+    /**
+     * Creates a new instance of PaymentInfoCash
+     * @param dTotal
+     * @param dPaid
+     * @param dTendered
+     */
+    public PaymentInfoCash(double dTotal, double dPaid, double dTendered) {
         m_dTotal = dTotal;
         m_dPaid = dPaid;
+        m_dTendered = dTendered;
     }
-    
-    public PaymentInfo copyPayment(){
-        return new PaymentInfoCash(m_dTotal, m_dPaid);
+
+    /**
+     * Creates a new instance of PaymentInfoCash
+     * @param dTotal
+     * @param dPaid
+     * @param dTendered
+     * @param prePayAmount
+     */
+    public PaymentInfoCash(double dTotal, double dPaid, double dTendered, double prePayAmount) {
+        this(dTotal, dTendered, dPaid);
+        this.prePayAmount = prePayAmount;
     }
-    
-    public String getName() {
-        return "cash";
-    }   
-    public double getTotal() {
-        return m_dTotal;
-    }   
-    public double getPaid() {
-        return m_dPaid;
+
+    /**
+     *
+     * @return
+     */
+    @Override
+    public PaymentInfo copyPayment() {
+       return new PaymentInfoCash(m_dTotal, m_dPaid, m_dTendered, prePayAmount);
+//        return new PaymentInfoCash(m_dTotal, m_dPaid, prePayAmount);        
     }
-    public String getTransactionID(){
+
+    /**
+     *
+     * @return
+     */
+    @Override
+    public String getTransactionID() {
         return "no ID";
     }
     
+    /**
+     *
+     * @return
+     */
+    @Override
+    public String getName() {
+        return "cash";
+    }
+
+    /**
+     *
+     * @return
+     */
+    @Override
+    public double getTotal() {
+        return m_dTotal;
+    }
+    
+    /**
+     *
+     * @return
+     */
+    @Override
+    public double getPaid() {
+        return m_dPaid;
+    }
+
+    /**
+     *
+     * @return
+     */
+    @Override
+    public double getTendered() {
+        return m_dTendered;
+    }
+
+    /**
+     *
+     * @return
+     */
+    @Override
+   public double getChange(){
+       return m_dPaid - m_dTotal;
+   }
+
+    /**
+     *
+     * @return
+     */
+    @Override
+
+    public String getCardName() {
+       return m_dCardName;
+   }     
+
+    /**
+     *
+     * @return
+     */
+    public boolean hasPrePay() {
+        return prePayAmount > 0;
+    }
+    
+    /**
+     *
+     * @return
+     */
+    public double getPrePaid() {
+        return prePayAmount;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public String printTendered() {
+       return Formats.CURRENCY.formatValue(m_dTendered);
+   }    
+
+    /**
+     *
+     * @return
+     */
     public String printPaid() {
-        return Formats.CURRENCY.formatValue(new Double(m_dPaid));
-    }   
+        return Formats.CURRENCY.formatValue(m_dPaid);
+    }
+
+    /**
+     *
+     * @return
+     */
     public String printChange() {
         return Formats.CURRENCY.formatValue(new Double(m_dPaid - m_dTotal));
-    }    
+    }
+
 }

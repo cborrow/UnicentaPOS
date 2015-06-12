@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (C) 2008-2009 Openbravo, S.L.
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta & previous Openbravo POS works
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -31,11 +31,12 @@ import java.util.UUID;
  *
  * @author  adrianromero
  */
-public class AttributeSetsEditor extends javax.swing.JPanel implements EditorRecord {
+public final class AttributeSetsEditor extends javax.swing.JPanel implements EditorRecord {
 
     private Object id;
 
-    /** Creates new form AttributesEditor */
+    /** Creates new form AttributesEditor
+     * @param dirty */
     public AttributeSetsEditor(DirtyManager dirty) {
         initComponents();
 
@@ -43,16 +44,32 @@ public class AttributeSetsEditor extends javax.swing.JPanel implements EditorRec
 
         writeValueEOF();
     }
+
+    /**
+     *
+     */
+    @Override
     public void writeValueEOF() {
         id = null;
         m_jName.setText(null);
         m_jName.setEnabled(false);
     }
+
+    /**
+     *
+     */
+    @Override
     public void writeValueInsert() {
         id = UUID.randomUUID().toString();
         m_jName.setText(null);
         m_jName.setEnabled(true);
     }
+
+    /**
+     *
+     * @param value
+     */
+    @Override
     public void writeValueDelete(Object value) {
 
         Object[] attrset = (Object[]) value;
@@ -60,6 +77,12 @@ public class AttributeSetsEditor extends javax.swing.JPanel implements EditorRec
         m_jName.setText(Formats.STRING.formatValue(attrset[1]));
         m_jName.setEnabled(false);
     }
+
+    /**
+     *
+     * @param value
+     */
+    @Override
     public void writeValueEdit(Object value) {
 
         Object[] attrset = (Object[]) value;
@@ -68,6 +91,12 @@ public class AttributeSetsEditor extends javax.swing.JPanel implements EditorRec
         m_jName.setEnabled(true);
     }
 
+    /**
+     *
+     * @return
+     * @throws BasicException
+     */
+    @Override
     public Object createValue() throws BasicException {
 
         Object[] attrset = new Object[2];
@@ -78,10 +107,19 @@ public class AttributeSetsEditor extends javax.swing.JPanel implements EditorRec
         return attrset;
     }
 
+    /**
+     *
+     * @return
+     */
+    @Override
     public Component getComponent() {
         return this;
     }
 
+    /**
+     *
+     */
+    @Override
     public void refresh() {
     }
 
@@ -97,13 +135,15 @@ public class AttributeSetsEditor extends javax.swing.JPanel implements EditorRec
         jLabel2 = new javax.swing.JLabel();
         m_jName = new javax.swing.JTextField();
 
+        jLabel2.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel2.setText(AppLocal.getIntString("Label.Name")); // NOI18N
+
+        m_jName.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 316, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -113,13 +153,12 @@ public class AttributeSetsEditor extends javax.swing.JPanel implements EditorRec
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 43, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(m_jName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(m_jName, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(12, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 

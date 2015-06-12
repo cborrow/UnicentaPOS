@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (c) 2009-2011 uniCenta
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -21,31 +21,50 @@ package com.openbravo.pos.util;
 
 import java.awt.image.*;
 import java.awt.*;
+import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JLabel;
 
+/**
+ *
+ * @author JG uniCenta
+ */
 public class ThumbNailBuilder {
     
     private Image m_imgdefault;
     private int m_width;
     private int m_height;
     
-    /** Creates a new instance of ThumbNailBuilder */    
+    /** Creates a new instance of ThumbNailBuilder
+     * @param width
+     * @param height */    
     public ThumbNailBuilder(int width, int height) {
         init(width, height, null);
     }
     
+    /**
+     *
+     * @param width
+     * @param height
+     * @param imgdef
+     */
     public ThumbNailBuilder(int width, int height, Image imgdef) {
         init(width, height, imgdef);
       
     }
     
+    /**
+     *
+     * @param width
+     * @param height
+     * @param img
+     */
     public ThumbNailBuilder(int width, int height, String img) {
         
         Image defimg;
         try {
             init(width, height, ImageIO.read(getClass().getClassLoader().getResourceAsStream(img)));               
-        } catch (Exception fnfe) {
+        } catch (IOException fnfe) {
             init(width, height, null);
         }                 
     }    
@@ -60,6 +79,11 @@ public class ThumbNailBuilder {
         } 
     }
     
+    /**
+     *
+     * @param img
+     * @return
+     */
     public Image getThumbNail(Image img) {
    
         if (img == null) {
@@ -67,8 +91,14 @@ public class ThumbNailBuilder {
         } else {
             return createThumbNail(img);
         }     
-    }      
-    
+    }
+
+    /**
+     *
+     * @param img
+     * @param text
+     * @return
+     */
     public Image getThumbNailText(Image img, String text) {
                 
         img = getThumbNail(img);
@@ -84,7 +114,7 @@ public class ThumbNailBuilder {
         label.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         label.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);            
         Dimension d = label.getPreferredSize();
-        label.setBounds(0, 0, imgtext.getWidth(), d.height);  
+        label.setBounds(0, 0, imgtext.getWidth(), d.height);
         
         // The background
         Color c1 = new Color(0xff, 0xff, 0xff, 0x40);

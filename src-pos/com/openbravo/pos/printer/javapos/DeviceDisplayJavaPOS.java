@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (c) 2009-2011 uniCenta
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta & previous Openbravo POS works
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -19,14 +19,18 @@
 
 package com.openbravo.pos.printer.javapos;
 
-import jpos.JposException;
-import jpos.LineDisplay;
-import jpos.LineDisplayConst;
 import com.openbravo.pos.printer.DeviceDisplay;
 import com.openbravo.pos.printer.DeviceDisplayBase;
 import com.openbravo.pos.printer.DeviceDisplayImpl;
 import com.openbravo.pos.printer.TicketPrinterException;
+import jpos.JposException;
+import jpos.LineDisplay;
+import jpos.LineDisplayConst;
 
+/**
+ *
+ * @author JG uniCenta
+ */
 public class DeviceDisplayJavaPOS implements DeviceDisplay, DeviceDisplayImpl {
     
     private String m_sName;
@@ -34,7 +38,9 @@ public class DeviceDisplayJavaPOS implements DeviceDisplay, DeviceDisplayImpl {
     
     private DeviceDisplayBase m_displaylines;
     
-    /** Creates a new instance of DeviceDisplayJavaPOS */
+    /** Creates a new instance of DeviceDisplayJavaPOS
+     * @param sDeviceName
+     * @throws com.openbravo.pos.printer.TicketPrinterException */
     public DeviceDisplayJavaPOS(String sDeviceName) throws TicketPrinterException {
         m_sName = sDeviceName;
         
@@ -50,28 +56,66 @@ public class DeviceDisplayJavaPOS implements DeviceDisplay, DeviceDisplayImpl {
         m_displaylines = new DeviceDisplayBase(this);
    }
     
+    /**
+     *
+     * @return
+     */
+    @Override
     public String getDisplayName() {
         return m_sName;
     }    
+
+    /**
+     *
+     * @return
+     */
+    @Override
     public String getDisplayDescription() {
         return null;
     }      
+
+    /**
+     *
+     * @return
+     */
+    @Override
     public javax.swing.JComponent getDisplayComponent() {
         return null;
     }
     
+    /**
+     *
+     * @param animation
+     * @param sLine1
+     * @param sLine2
+     */
+    @Override
     public void writeVisor(int animation, String sLine1, String sLine2) {
         m_displaylines.writeVisor(animation, sLine1, sLine2);
-    }    
-    
+    }
+
+    /**
+     *
+     * @param sLine1
+     * @param sLine2
+     */
+    @Override
     public void writeVisor(String sLine1, String sLine2) {        
         m_displaylines.writeVisor(sLine1, sLine2);
     }
      
+    /**
+     *
+     */
+    @Override
     public void clearVisor() {
         m_displaylines.clearVisor();
     }
     
+    /**
+     *
+     */
+    @Override
     public void repaintLines() {
         try {
             m_ld.displayTextAt(0, 0, m_displaylines.getLine1(), LineDisplayConst.DISP_DT_NORMAL);
@@ -80,6 +124,7 @@ public class DeviceDisplayJavaPOS implements DeviceDisplay, DeviceDisplayImpl {
         }
     }
     
+    @Override
     public void finalize() throws Throwable {
    
         m_ld.setDeviceEnabled(false);

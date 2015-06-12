@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (C) 2008-2009 Openbravo, S.L.
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta & previous Openbravo POS works
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -21,12 +21,7 @@ package com.openbravo.pos.inventory;
 
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.gui.ComboBoxValModel;
-import com.openbravo.data.loader.DataRead;
-import com.openbravo.data.loader.SentenceList;
-import com.openbravo.data.loader.SerializerRead;
-import com.openbravo.data.loader.SerializerWrite;
-import com.openbravo.data.loader.SerializerWriteString;
-import com.openbravo.data.loader.StaticSentence;
+import com.openbravo.data.loader.*;
 import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.forms.AppView;
 import com.openbravo.pos.reports.ReportEditorCreator;
@@ -48,17 +43,28 @@ public class AttributeFilter extends javax.swing.JPanel implements ReportEditorC
         initComponents();
     }
 
+    /**
+     *
+     * @param app
+     */
+    @Override
     public void init(AppView app) {
 
         attsent = new StaticSentence(app.getSession()
             , "SELECT ID, NAME FROM ATTRIBUTE ORDER BY NAME"
             , null
-            , new SerializerRead() { public Object readValues(DataRead dr) throws BasicException {
+            , new SerializerRead() {@Override
+ public Object readValues(DataRead dr) throws BasicException {
                 return new AttributeInfo(dr.getString(1), dr.getString(2));
             }});
         attmodel = new ComboBoxValModel();
     }
 
+    /**
+     *
+     * @throws BasicException
+     */
+    @Override
     public void activate() throws BasicException {
         List a = attsent.list();
         attmodel = new ComboBoxValModel(a);
@@ -66,22 +72,46 @@ public class AttributeFilter extends javax.swing.JPanel implements ReportEditorC
         jAttr.setModel(attmodel);
     }
 
+    /**
+     *
+     * @return
+     */
+    @Override
     public SerializerWrite getSerializerWrite() {
         return SerializerWriteString.INSTANCE;
     }
 
+    /**
+     *
+     * @return
+     */
+    @Override
     public Component getComponent() {
         return this;
     }
 
+    /**
+     *
+     * @param l
+     */
     public void addActionListener(ActionListener l) {
         jAttr.addActionListener(l);
     }
 
+    /**
+     *
+     * @param l
+     */
     public void removeActionListener(ActionListener l) {
         jAttr.removeActionListener(l);
     }
 
+    /**
+     *
+     * @return
+     * @throws BasicException
+     */
+    @Override
     public Object createValue() throws BasicException {
         AttributeInfo att = (AttributeInfo) attmodel.getSelectedItem();
 
@@ -100,13 +130,15 @@ public class AttributeFilter extends javax.swing.JPanel implements ReportEditorC
         jLabel8 = new javax.swing.JLabel();
         jAttr = new javax.swing.JComboBox();
 
+        jLabel8.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel8.setText(AppLocal.getIntString("label.attribute")); // NOI18N
+
+        jAttr.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 366, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -116,13 +148,12 @@ public class AttributeFilter extends javax.swing.JPanel implements ReportEditorC
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 44, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel8)
-                    .addComponent(jAttr, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jAttr, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 

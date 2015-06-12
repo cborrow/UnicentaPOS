@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (c) 2009-2011 uniCenta
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta & previous Openbravo POS works
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -19,27 +19,28 @@
 
 package com.openbravo.pos.mant;
 
+import com.openbravo.basic.BasicException;
+import com.openbravo.data.user.DirtyManager;
+import com.openbravo.data.user.EditorRecord;
+import com.openbravo.format.Formats;
+import com.openbravo.pos.forms.AppLocal;
 import java.awt.Component;
 import java.awt.image.BufferedImage;
 import java.util.UUID;
-import javax.swing.*;
-import com.openbravo.pos.forms.AppLocal;
-import com.openbravo.format.Formats;
-import com.openbravo.basic.BasicException;
-import com.openbravo.data.user.EditorRecord;
-import com.openbravo.data.user.DirtyManager;
+import javax.swing.JPanel;
 
 
 /**
  *
  * @author adrianromero
  */
-public class FloorsEditor extends JPanel implements EditorRecord {
+public final class FloorsEditor extends JPanel implements EditorRecord {
     
 //    private DirtyManager m_Dirty = new DirtyManager();    
     private String m_sID;
     
-    /** Creates new form FloorsEditor */
+    /** Creates new form FloorsEditor
+     * @param dirty */
     public FloorsEditor(DirtyManager dirty) {
         initComponents();
          
@@ -49,6 +50,10 @@ public class FloorsEditor extends JPanel implements EditorRecord {
         writeValueEOF();
     }
 
+    /**
+     *
+     */
+    @Override
     public void writeValueEOF() {
         
         m_sID = null;
@@ -58,6 +63,11 @@ public class FloorsEditor extends JPanel implements EditorRecord {
         m_jName.setEnabled(false);
         m_jImage.setEnabled(false);
     }  
+
+    /**
+     *
+     */
+    @Override
     public void writeValueInsert() {
         
         m_sID = UUID.randomUUID().toString(); 
@@ -67,6 +77,12 @@ public class FloorsEditor extends JPanel implements EditorRecord {
         m_jName.setEnabled(true);
         m_jImage.setEnabled(true);
     }
+
+    /**
+     *
+     * @param value
+     */
+    @Override
     public void writeValueDelete(Object value) {
         
         Object[] floor = (Object[]) value;
@@ -77,6 +93,12 @@ public class FloorsEditor extends JPanel implements EditorRecord {
         m_jName.setEnabled(false);
         m_jImage.setEnabled(false);
     }    
+
+    /**
+     *
+     * @param value
+     */
+    @Override
     public void writeValueEdit(Object value) {
         
         Object[] floor = (Object[]) value;
@@ -88,6 +110,12 @@ public class FloorsEditor extends JPanel implements EditorRecord {
         m_jImage.setEnabled(true);
     }
 
+    /**
+     *
+     * @return
+     * @throws BasicException
+     */
+    @Override
     public Object createValue() throws BasicException {
         
         Object[] floor = new Object[3];
@@ -96,12 +124,21 @@ public class FloorsEditor extends JPanel implements EditorRecord {
         floor[1] = m_jName.getText();
         floor[2] = m_jImage.getImage();
         return floor;
-    }    
-    
+    }
+
+    /**
+     *
+     * @return
+     */
+    @Override
     public Component getComponent() {
         return this;
     }
     
+    /**
+     *
+     */
+    @Override
     public void refresh() {
     }
     
@@ -126,16 +163,21 @@ public class FloorsEditor extends JPanel implements EditorRecord {
         jPanel1.setPreferredSize(new java.awt.Dimension(150, 100));
         jPanel1.setLayout(null);
 
+        jLabel3.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel3.setText(AppLocal.getIntString("Label.Name")); // NOI18N
         jPanel1.add(jLabel3);
-        jLabel3.setBounds(20, 20, 90, 20);
+        jLabel3.setBounds(20, 20, 90, 25);
+
+        m_jName.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jPanel1.add(m_jName);
-        m_jName.setBounds(110, 20, 180, 22);
+        m_jName.setBounds(110, 20, 180, 25);
 
         add(jPanel1, java.awt.BorderLayout.NORTH);
 
         jPanel3.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 5, 0, 0));
         jPanel3.setLayout(new java.awt.BorderLayout());
+
+        m_jImage.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jPanel3.add(m_jImage, java.awt.BorderLayout.CENTER);
 
         add(jPanel3, java.awt.BorderLayout.CENTER);

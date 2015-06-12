@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (c) 2009-2011 uniCenta
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta & previous Openbravo POS works
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -36,7 +36,8 @@ public class LocaleResources {
     
     /** Creates a new instance of LocaleResources */
     public LocaleResources() {
-        m_resources = new LinkedList<ResourceBundle>();
+//        m_resources = new LinkedList<ResourceBundle>();
+        m_resources = new LinkedList<>();        
         
 //        File fuserdir = new File(System.getProperty("user.dir"));
 //        File fresources = new File(fuserdir, "locales");
@@ -53,11 +54,21 @@ public class LocaleResources {
 //        return ResourceBundle.getBundle(bundlename, Locale.getDefault(), m_localeloader);
 //    }
     
+    /**
+     *
+     * @param bundlename
+     */
+        
     public void addBundleName(String bundlename) {
 //        m_resources.add(getBundle(bundlename));
         m_resources.add(ResourceBundle.getBundle(bundlename));
-    }    
-    
+    }
+
+    /**
+     *
+     * @param sKey
+     * @return
+     */
     public String getString(String sKey) {
         
         if (sKey == null) {
@@ -76,6 +87,12 @@ public class LocaleResources {
         }
     }
 
+    /**
+     *
+     * @param sKey
+     * @param sValues
+     * @return
+     */
     public String getString(String sKey, Object ... sValues) {
         
         if (sKey == null) {

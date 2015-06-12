@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (c) 2009-2011 uniCenta
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta & previous Openbravo POS works
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -19,28 +19,42 @@
 
 package com.openbravo.data.user;
 
-import java.util.*;
-import com.openbravo.data.loader.TableDefinition;
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.loader.SentenceList;
+import com.openbravo.data.loader.TableDefinition;
+import java.util.*;
 
+/**
+ *
+ * @author JG uniCenta
+ */
 public class ListProviderCreator implements ListProvider {
     
     private SentenceList sent;
     private EditorCreator prov;
     private Object params;
     
-    /** Creates a new instance of ListProviderEditor */
+    /** Creates a new instance of ListProviderEditor
+     * @param sent
+     * @param prov */
     public ListProviderCreator(SentenceList sent, EditorCreator prov) {
         this.sent = sent;
         this.prov = prov;
         params = null;
     }
     
+    /**
+     *
+     * @param sent
+     */
     public ListProviderCreator(SentenceList sent) {
         this(sent, null);
     }
     
+    /**
+     *
+     * @param table
+     */
     public ListProviderCreator(TableDefinition table) {        
         this(table.getListSentence(), null);
     }
@@ -75,11 +89,23 @@ public class ListProviderCreator implements ListProvider {
 //        sent.setSerializerWrite(sw);
 //    }
 
+    /**
+     *
+     * @return
+     * @throws BasicException
+     */
+    @Override
     public List loadData() throws BasicException {       
         params = (prov == null) ? null : prov.createValue();
         return refreshData();
     }
     
+    /**
+     *
+     * @return
+     * @throws BasicException
+     */
+    @Override
     public List refreshData() throws BasicException {
         return sent.list(params);
     }    

@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (c) 2009-2011 uniCenta
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta & previous Openbravo POS works
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -21,11 +21,7 @@ package com.openbravo.pos.inventory;
 
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.loader.Datas;
-import com.openbravo.data.model.Column;
-import com.openbravo.data.model.Field;
-import com.openbravo.data.model.PrimaryKey;
-import com.openbravo.data.model.Row;
-import com.openbravo.data.model.Table;
+import com.openbravo.data.model.*;
 import com.openbravo.data.user.EditorRecord;
 import com.openbravo.format.Formats;
 import com.openbravo.pos.forms.AppLocal;
@@ -46,6 +42,10 @@ public class AuxiliarPanel extends JPanelTable2 {
     private AuxiliarEditor editor;
     private AuxiliarFilter filter;
 
+    /**
+     *
+     */
+    @Override
     protected void init() {  
         
         filter = new AuxiliarFilter();
@@ -75,6 +75,10 @@ public class AuxiliarPanel extends JPanelTable2 {
         editor = new AuxiliarEditor(app, dirty);
     }
 
+    /**
+     *
+     * @throws BasicException
+     */
     @Override
     public void activate() throws BasicException {
         filter.activate();
@@ -84,15 +88,29 @@ public class AuxiliarPanel extends JPanelTable2 {
         reload(filter);
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public Component getFilter(){
         return filter.getComponent();
     }
     
+    /**
+     *
+     * @return
+     */
+    @Override
     public EditorRecord getEditor() {
         return editor;
-    }  
-    
+    }
+
+    /**
+     *
+     * @return
+     */
+    @Override
     public String getTitle() {
         return AppLocal.getIntString("Menu.Auxiliar");
     } 

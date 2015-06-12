@@ -2,7 +2,7 @@
 
 <!--
     uniCenta oPOS - Touch Friendly Point Of Sale
-    Copyright (c) 2009-2011 uniCenta
+    Copyright (c) 2009-2014 uniCenta & previous Openbravo POS works
     http://sourceforge.net/projects/unicentaopos
 
     This program is free software; you can redistribute it and/or modify
@@ -45,4 +45,5 @@
 <!ELEMENT play (#PCDATA)>
 
 <!ELEMENT opendrawer EMPTY>
+<!ELEMENT cut EMPTY>
 <!ATTLIST opendrawer printer CDATA "0">

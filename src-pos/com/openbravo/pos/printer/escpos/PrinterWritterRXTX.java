@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (c) 2009-2011 uniCenta
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta & previous Openbravo POS works
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -20,10 +20,15 @@
 package com.openbravo.pos.printer.escpos;
 
 // import javax.comm.*; // Java comm library
-import gnu.io.*; // RXTX comm library
-import java.io.*;
-import com.openbravo.pos.printer.*;
+import com.openbravo.pos.printer.TicketPrinterException;
+import gnu.io.*;
+import java.io.IOException;
+import java.io.OutputStream;
 
+/**
+ *
+ * @author JG uniCenta
+ */
 public class PrinterWritterRXTX extends PrinterWritter /* implements SerialPortEventListener */ {
     
     private CommPortIdentifier m_PortIdPrinter;
@@ -32,12 +37,19 @@ public class PrinterWritterRXTX extends PrinterWritter /* implements SerialPortE
     private String m_sPortPrinter;
     private OutputStream m_out;
     
-    /** Creates a new instance of PrinterWritterComm */
+    /** Creates a new instance of PrinterWritterComm
+     * @param sPortPrinter
+     * @throws com.openbravo.pos.printer.TicketPrinterException */
     public PrinterWritterRXTX(String sPortPrinter) throws TicketPrinterException {
         m_sPortPrinter = sPortPrinter;
         m_out = null; 
     }
     
+    /**
+     *
+     * @param data
+     */
+    @Override
     protected void internalWrite(byte[] data) {
         try {  
             if (m_out == null) {
@@ -59,17 +71,16 @@ public class PrinterWritterRXTX extends PrinterWritter /* implements SerialPortE
                 }
             }
             m_out.write(data);
-        } catch (NoSuchPortException e) {
-            System.err.println(e);
-        } catch (PortInUseException e) {
-            System.err.println(e);
-        } catch (UnsupportedCommOperationException e) {
-            System.err.println(e);
-        } catch (IOException e) {
+// JG 16 May 12 use multicatch
+        } catch (NoSuchPortException | PortInUseException | UnsupportedCommOperationException | IOException e) {
             System.err.println(e);
         }      
     }
     
+    /**
+     *
+     */
+    @Override
     protected void internalFlush() {
         try {  
             if (m_out != null) {
@@ -80,6 +91,10 @@ public class PrinterWritterRXTX extends PrinterWritter /* implements SerialPortE
         }    
     }
     
+    /**
+     *
+     */
+    @Override
     protected void internalClose() {
         try {  
             if (m_out != null) {

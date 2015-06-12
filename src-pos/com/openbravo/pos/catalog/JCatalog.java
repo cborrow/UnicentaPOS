@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (c) 2009-2011 uniCenta
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta & previous Openbravo POS works
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -19,22 +19,27 @@
 
 package com.openbravo.pos.catalog;
 
-import com.openbravo.pos.ticket.CategoryInfo;
-import com.openbravo.pos.ticket.ProductInfoExt;
-import com.openbravo.pos.util.ThumbNailBuilder;
-
-import java.util.*;
-import javax.swing.*;
-import javax.swing.event.*;
-import java.awt.event.*;
-import java.awt.*;
-import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.gui.JMessageDialog;
 import com.openbravo.data.gui.MessageInf;
+import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.forms.DataLogicSales;
 import com.openbravo.pos.sales.TaxesLogic;
+import com.openbravo.pos.ticket.CategoryInfo;
+import com.openbravo.pos.ticket.ProductInfoExt;
 import com.openbravo.pos.ticket.TaxInfo;
+import com.openbravo.pos.util.ThumbNailBuilder;
+import java.awt.CardLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.*;
+import javax.swing.*;
+import javax.swing.event.EventListenerList;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 /**
  *
@@ -42,6 +47,9 @@ import com.openbravo.pos.ticket.TaxInfo;
  */
 public class JCatalog extends JPanel implements ListSelectionListener, CatalogSelector {
     
+    /**
+     *
+     */
     protected EventListenerList listeners = new EventListenerList();
     private DataLogicSales m_dlSales;   
     private TaxesLogic taxeslogic;
@@ -50,21 +58,36 @@ public class JCatalog extends JPanel implements ListSelectionListener, CatalogSe
     private boolean taxesincluded;
     
     // Set of Products panels
-    private Map<String, ProductInfoExt> m_productsset = new HashMap<String, ProductInfoExt>();
+    // JG Aug 2013 switched to diamond inference
+    private final Map<String, ProductInfoExt> m_productsset = new HashMap<>();
     
     // Set of Categoriespanels
-     private Set<String> m_categoriesset = new HashSet<String>();
+    // JG Aug 2013 switched to diamond inference    
+     private final Set<String> m_categoriesset = new HashSet<>();
         
     private ThumbNailBuilder tnbbutton;
     private ThumbNailBuilder tnbcat;
+    private ThumbNailBuilder tnbsubcat;
     
     private CategoryInfo showingcategory = null;
+    
+    private boolean b;
         
-    /** Creates new form JCatalog */
+    /** Creates new form JCatalog
+     * @param dlSales */
     public JCatalog(DataLogicSales dlSales) {
         this(dlSales, false, false, 64, 54);
+         // this(dlSales, false, false, 32, 32);
     }
-    
+
+    /**
+     *
+     * @param dlSales
+     * @param pricevisible
+     * @param taxesincluded
+     * @param width
+     * @param height
+     */
     public JCatalog(DataLogicSales dlSales, boolean pricevisible, boolean taxesincluded, int width, int height) {
         
         m_dlSales = dlSales;
@@ -73,26 +96,47 @@ public class JCatalog extends JPanel implements ListSelectionListener, CatalogSe
         
         initComponents();
         
-        m_jListCategories.addListSelectionListener(this);                
-        m_jscrollcat.getVerticalScrollBar().setPreferredSize(new Dimension(35, 35));
+        m_jListCategories.addListSelectionListener(this);
+//        m_jListCategories.getPreferredScrollableViewportSize().setSize(400, height);
         
-        tnbcat = new ThumbNailBuilder(32, 32, "com/openbravo/images/folder_yellow.png");           
+        m_jscrollcat.getVerticalScrollBar().setPreferredSize(new Dimension(48, 48));
+        
+        tnbcat = new ThumbNailBuilder(48, 48, "com/openbravo/images/category.png");  
+        tnbsubcat = new ThumbNailBuilder(width, height, "com/openbravo/images/subcategory.png"); 
         tnbbutton = new ThumbNailBuilder(width, height, "com/openbravo/images/package.png");
+
     }
     
+    /**
+     *
+     * @return
+     */
+    @Override
     public Component getComponent() {
         return this;
     }
     
+    /**
+     *
+     * @param id
+     */
+    @Override
     public void showCatalogPanel(String id) {
            
         if (id == null) {
+// if the product selected is a sub category then display the products under that category  other wise show the root catagory products         
             showRootCategoriesPanel();
-        } else {            
+        } else {       
+// this is the sub catergory view            
             showProductPanel(id);
         }
     }
     
+    /**
+     *
+     * @throws BasicException
+     */
+    @Override
     public void loadCatalog() throws BasicException {
         
         // delete all categories panel
@@ -125,6 +169,11 @@ public class JCatalog extends JPanel implements ListSelectionListener, CatalogSe
         showRootCategoriesPanel();
     }
     
+    /**
+     *
+     * @param value
+     */
+    @Override
     public void setComponentEnabled(boolean value) {
         
         m_jListCategories.setEnabled(value);
@@ -144,13 +193,25 @@ public class JCatalog extends JPanel implements ListSelectionListener, CatalogSe
         this.setEnabled(value);
     }
     
+    /**
+     *
+     * @param l
+     */
+    @Override
     public void addActionListener(ActionListener l) {
         listeners.add(ActionListener.class, l);
     }
+
+    /**
+     *
+     * @param l
+     */
+    @Override
     public void removeActionListener(ActionListener l) {
         listeners.remove(ActionListener.class, l);
     }
 
+    @Override
     public void valueChanged(ListSelectionEvent evt) {
         
         if (!evt.getValueIsAdjusting()) {
@@ -161,21 +222,24 @@ public class JCatalog extends JPanel implements ListSelectionListener, CatalogSe
                 m_jListCategories.scrollRectToVisible(oRect);       
             }
         }
-    }  
-    
+    }
+
+    /**
+     *
+     * @param prod
+     */
     protected void fireSelectedProduct(ProductInfoExt prod) {
         EventListener[] l = listeners.getListeners(ActionListener.class);
         ActionEvent e = null;
-        for (int i = 0; i < l.length; i++) {
+        for (EventListener l1 : l) {
             if (e == null) {
                 e = new ActionEvent(prod, ActionEvent.ACTION_PERFORMED, prod.getID());
             }
-            ((ActionListener) l[i]).actionPerformed(e);	       
+            ((ActionListener) l1).actionPerformed(e);	       
         }
     }   
     
     private void selectCategoryPanel(String catid) {
-
         try {
             // Load categories panel if not exists
             if (!m_categoriesset.contains(catid)) {
@@ -185,19 +249,25 @@ public class JCatalog extends JPanel implements ListSelectionListener, CatalogSe
                 m_jProducts.add(jcurrTab, catid);
                 m_categoriesset.add(catid);
                
-                // Add subcategories
+// Add subcategories
                 java.util.List<CategoryInfo> categories = m_dlSales.getSubcategories(catid);
                 for (CategoryInfo cat : categories) {
-
-                    jcurrTab.addButton(new ImageIcon(tnbbutton.getThumbNailText(cat.getImage(), cat.getName())), new SelectedCategory(cat));
+// these the sub categories displayed in the main products Panel    
+                   
+                   if (cat.getCatShowName()) {
+                    jcurrTab.addButton(new ImageIcon(tnbsubcat.getThumbNailText(cat.getImage(), cat.getName())), new SelectedCategory(cat),cat.getTextTip());
+                   }else{
+                    jcurrTab.addButton(new ImageIcon(tnbsubcat.getThumbNailText(cat.getImage(), "")), new SelectedCategory(cat),cat.getTextTip());
+                   }
                 }
                 
-                // Add products
+// Add products
                 java.util.List<ProductInfoExt> products = m_dlSales.getProductCatalog(catid);
                 for (ProductInfoExt prod : products) {
-                    jcurrTab.addButton(new ImageIcon(tnbbutton.getThumbNailText(prod.getImage(), getProductLabel(prod))), new SelectedAction(prod));
+// These are the products selection panel                   
+                   jcurrTab.addButton(new ImageIcon(tnbbutton.getThumbNailText(prod.getImage(), getProductLabel(prod))), new SelectedAction(prod),prod.getTextTip());
                 }
-            }
+                }
             
             // Show categories panel
             CardLayout cl = (CardLayout)(m_jProducts.getLayout());
@@ -214,14 +284,15 @@ public class JCatalog extends JPanel implements ListSelectionListener, CatalogSe
                 TaxInfo tax = taxeslogic.getTaxInfo(product.getTaxCategoryID());
                 return "<html><center>" + product.getName() + "<br>" + product.printPriceSellTax(tax);
             } else {
-                return "<html><center>" + product.getName() + "<br>" + product.printPriceSell();
+//                return "<html><center>" + product.getName() + "<br>" + product.printPriceSell();
+                return "<html><center>" + product.getDisplay() + "<br>" + product.printPriceSell();                
             }
         } else {
-            return product.getName();
+            return product.getDisplay();
         }
     }
     
-    private void selectIndicatorPanel(Icon icon, String label) {
+    private void selectIndicatorPanel(Icon icon, String label, String texttip) {
         
         m_lblIndicator.setText(label);
         m_lblIndicator.setIcon(icon);
@@ -250,7 +321,9 @@ public class JCatalog extends JPanel implements ListSelectionListener, CatalogSe
     }
     
     private void showSubcategoryPanel(CategoryInfo category) {
-        selectIndicatorPanel(new ImageIcon(tnbbutton.getThumbNail(category.getImage())), category.getName());
+// Modified JDL 13.04.13
+// this is the new panel that displays when a sub catergory is selected mouse does not work here        
+        selectIndicatorPanel(new ImageIcon(tnbsubcat.getThumbNail(category.getImage())),category.getName(), category.getTextTip());
         selectCategoryPanel(category.getID());
         showingcategory = category;
     }
@@ -272,7 +345,9 @@ public class JCatalog extends JPanel implements ListSelectionListener, CatalogSe
                     // Create  products panel
                     java.util.List<ProductInfoExt> products = m_dlSales.getProductComments(id);
 
-                    if (products.size() == 0) {
+// JG Aug 2013 switched to isEmpty()
+//                    if (products.size() == 0) {
+                        if (products.isEmpty()) {                    
                         // no hay productos por tanto lo anado a la de vacios y muestro el panel principal.
                         m_productsset.put(id, null);
                         if (showingcategory == null) {
@@ -292,16 +367,17 @@ public class JCatalog extends JPanel implements ListSelectionListener, CatalogSe
 
                         // Add products
                         for (ProductInfoExt prod : products) {
-                            jcurrTab.addButton(new ImageIcon(tnbbutton.getThumbNailText(prod.getImage(), getProductLabel(prod))), new SelectedAction(prod));
+// ADDED JDL 09.04.13 TEXT TIP FUNCTION   getProductLabel(prod)))      product.getDisplay()
+                        jcurrTab.addButton(new ImageIcon(tnbbutton.getThumbNailText(prod.getImage(), getProductLabel(prod))), new SelectedAction(prod),prod.getTextTip());                            
+
                         }                       
+                        selectIndicatorPanel(new ImageIcon(tnbbutton.getThumbNail(product.getImage())),product.getDisplay(), product.getTextTip());                        
 
-                        selectIndicatorPanel(new ImageIcon(tnbbutton.getThumbNail(product.getImage())), product.getName());
-
+                        
                         CardLayout cl = (CardLayout)(m_jProducts.getLayout());
                         cl.show(m_jProducts, "PRODUCT." + id); 
                     }
                 } catch (BasicException eb) {
-                    eb.printStackTrace();
                     m_productsset.put(id, null);
                     if (showingcategory == null) {
                         showRootCategoriesPanel();                         
@@ -312,41 +388,47 @@ public class JCatalog extends JPanel implements ListSelectionListener, CatalogSe
             }
         } else {
             // already exists
-            selectIndicatorPanel(new ImageIcon(tnbbutton.getThumbNail(product.getImage())), product.getName());
-
+            //selectIndicatorPanel(new ImageIcon(tnbbutton.getThumbNail(product.getImage())), product.getName());
+            selectIndicatorPanel(new ImageIcon(tnbbutton.getThumbNail(product.getImage())),  product.getName(), product.getTextTip());            
+          
+            
             CardLayout cl = (CardLayout)(m_jProducts.getLayout());
             cl.show(m_jProducts, "PRODUCT." + id); 
         }
     }
     
     private class SelectedAction implements ActionListener {
-        private ProductInfoExt prod;
+        private final ProductInfoExt prod;
         public SelectedAction(ProductInfoExt prod) {
             this.prod = prod;
         }
+        @Override
         public void actionPerformed(ActionEvent e) {
             fireSelectedProduct(prod);
         }
     }
     
     private class SelectedCategory implements ActionListener {
-        private CategoryInfo category;
+        private final CategoryInfo category;
         public SelectedCategory(CategoryInfo category) {
             this.category = category;
         }
+        @Override
         public void actionPerformed(ActionEvent e) {
             showSubcategoryPanel(category);
         }
     }
     
     private class CategoriesListModel extends AbstractListModel {
-        private java.util.List m_aCategories;
+        private final java.util.List m_aCategories;
         public CategoriesListModel(java.util.List aCategories) {
             m_aCategories = aCategories;
         }
+        @Override
         public int getSize() { 
             return m_aCategories.size(); 
         }
+        @Override
         public Object getElementAt(int i) {
             return m_aCategories.get(i);
         }    
@@ -394,11 +476,16 @@ public class JCatalog extends JPanel implements ListSelectionListener, CatalogSe
         m_jCategories.setPreferredSize(new java.awt.Dimension(275, 600));
         m_jCategories.setLayout(new java.awt.CardLayout());
 
+        m_jRootCategories.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        m_jRootCategories.setMinimumSize(new java.awt.Dimension(200, 100));
+        m_jRootCategories.setPreferredSize(new java.awt.Dimension(400, 130));
         m_jRootCategories.setLayout(new java.awt.BorderLayout());
 
         m_jscrollcat.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         m_jscrollcat.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        m_jscrollcat.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
 
+        m_jListCategories.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         m_jListCategories.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         m_jListCategories.setFocusable(false);
         m_jListCategories.addListSelectionListener(new javax.swing.event.ListSelectionListener() {

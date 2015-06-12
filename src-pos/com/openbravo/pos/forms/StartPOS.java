@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (C) 2008-2009 Openbravo, S.L.
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (C) 2008-2013 Openbravo, S.L.
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -19,15 +19,24 @@
 
 package com.openbravo.pos.forms;
 
-import java.util.Locale;
-import javax.swing.UIManager;
 import com.openbravo.format.Formats;
 import com.openbravo.pos.instance.InstanceQuery;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.LookAndFeel;
-import org.jvnet.substance.SubstanceLookAndFeel;
-import org.jvnet.substance.api.SubstanceSkin;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+import org.pushingpixels.substance.api.SubstanceLookAndFeel;
+import org.pushingpixels.substance.api.SubstanceSkin;
+import com.openbravo.pos.ticket.TicketInfo;
+
+
+// JG 16 May 2013 deprecated for pushingpixels
+// import org.jvnet.substance.SubstanceLookAndFeel;
+// import org.jvnet.substance.api.SubstanceSkin;
 
 /**
  *
@@ -37,11 +46,15 @@ public class StartPOS {
 
     private static final Logger logger = Logger.getLogger("com.openbravo.pos.forms.StartPOS");
     
+    
     /** Creates a new instance of StartPOS */
     private StartPOS() {
     }
-    
-    
+
+    /**
+     *
+     * @return
+     */
     public static boolean registerApp() {
                        
         // vemos si existe alguna instancia        
@@ -50,14 +63,20 @@ public class StartPOS {
             i = new InstanceQuery();
             i.getAppMessage().restoreWindow();
             return false;
-        } catch (Exception e) {
+// JG 6 May 2013 to Multicatch
+        } catch (RemoteException | NotBoundException e) {
             return true;
         }  
     }
     
+    /**
+     *
+     * @param args
+     */
     public static void main (final String args[]) {
         
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 
                 if (!registerApp()) {
@@ -87,16 +106,19 @@ public class StartPOS {
                 // Set the look and feel.
                 try {             
                     
-                    Object laf = Class.forName(config.getProperty("swing.defaultlaf")).newInstance();
-                    
+                    Object laf = Class.forName(config.getProperty("swing.defaultlaf")).newInstance();                    
                     if (laf instanceof LookAndFeel){
                         UIManager.setLookAndFeel((LookAndFeel) laf);
                     } else if (laf instanceof SubstanceSkin) {                      
-                        SubstanceLookAndFeel.setSkin((SubstanceSkin) laf);                   
+                        SubstanceLookAndFeel.setSkin((SubstanceSkin) laf);
                     }
-                } catch (Exception e) {
+// JG 6 May 2013 to multicatch
+                } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {                
                     logger.log(Level.WARNING, "Cannot set Look and Feel", e);
                 }
+// JG July 2014 Hostname for Tickets
+                String hostname = config.getProperty("machine.hostname");
+                TicketInfo.setHostname(hostname);
                 
                 String screenmode = config.getProperty("machine.screenmode");
                 if ("fullscreen".equals(screenmode)) {

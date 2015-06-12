@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (c) 2009-2011 uniCenta
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta & previous Openbravo POS works
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -21,11 +21,16 @@ package com.openbravo.data.gui;
 
 import java.util.*;
 
+/**
+ *
+ * @author JG uniCenta
+ */
 public class JListData extends javax.swing.JDialog {
     
     private Object m_selected;
     
-    /** Creates new form JListData */
+    /** Creates new form JListData
+     * @param parent */
     public JListData(java.awt.Frame parent) {
         super(parent, true);
         initComponents();
@@ -33,11 +38,21 @@ public class JListData extends javax.swing.JDialog {
         getRootPane().setDefaultButton(m_jOK);
     }
     
+    /**
+     *
+     * @param data
+     * @return
+     */
     public Object showList(List data) {
         
         return showList(new MyListData(data));       
-    }  
-    
+    }
+
+    /**
+     *
+     * @param model
+     * @return
+     */
     public Object showList(javax.swing.ListModel model) {
         
         m_jData.setModel(model);
@@ -58,10 +73,12 @@ public class JListData extends javax.swing.JDialog {
             m_data = data;
         }
         
+        @Override
         public Object getElementAt(int index) {
             return m_data.get(index);
         }
         
+        @Override
         public int getSize() {
             return m_data.size();
         } 
@@ -89,6 +106,9 @@ public class JListData extends javax.swing.JDialog {
         jPanel1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
 
         m_jOK.setText("Accept");
+        m_jOK.setMaximumSize(new java.awt.Dimension(65, 33));
+        m_jOK.setMinimumSize(new java.awt.Dimension(65, 33));
+        m_jOK.setPreferredSize(new java.awt.Dimension(65, 33));
         m_jOK.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 m_jOKActionPerformed(evt);
@@ -97,6 +117,9 @@ public class JListData extends javax.swing.JDialog {
         jPanel1.add(m_jOK);
 
         m_jCancel.setText("Cancel");
+        m_jCancel.setMaximumSize(new java.awt.Dimension(65, 33));
+        m_jCancel.setMinimumSize(new java.awt.Dimension(65, 33));
+        m_jCancel.setPreferredSize(new java.awt.Dimension(65, 33));
         m_jCancel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 m_jCancelActionPerformed(evt);
@@ -106,6 +129,7 @@ public class JListData extends javax.swing.JDialog {
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.SOUTH);
 
+        m_jData.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         m_jData.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane1.setViewportView(m_jData);
 
@@ -126,13 +150,14 @@ public class JListData extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void m_jCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_jCancelActionPerformed
-        // TODO add your handling code here:
+        
         dispose();
     }//GEN-LAST:event_m_jCancelActionPerformed
 
     private void m_jOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_jOKActionPerformed
-        // TODO add your handling code here:
+
         m_selected = m_jData.getSelectedValue();
+        
         dispose();
     }//GEN-LAST:event_m_jOKActionPerformed
     

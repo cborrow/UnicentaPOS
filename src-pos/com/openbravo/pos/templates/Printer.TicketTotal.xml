@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- 
     uniCenta oPOS - Touch friendly Point Of Sale
-    Copyright (c) 2009-2011 uniCenta.
+    Copyright (c) 2009-2014 uniCenta.
     http://sourceforge.net/projects/unicentaopos
 
     This file is part of uniCenta oPOS.
@@ -26,7 +26,7 @@
             <text align="right" length="10">${ticket.printTotal()}</text>
         </line>
         <line>
-           <text align="center" length="20">Thank You for your custom</text>
+           <text align="center" length="20">Thank You</text>
         </line>
     </display>
 </output>

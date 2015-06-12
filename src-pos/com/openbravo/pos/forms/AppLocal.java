@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (C) 2008-2009 Openbravo, S.L.
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta & previous Openbravo POS works
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -27,11 +27,21 @@ import com.openbravo.beans.LocaleResources;
  */
 public class AppLocal {
     
+    /**
+     *
+     */
     public static final String APP_NAME = "uniCenta oPOS";
+
+    /**
+     *
+     */
     public static final String APP_ID = "unicentaopos";
-    public static final String APP_VERSION = "2.80";
-  
-    // private static List<ResourceBundle> m_messages;
+
+    /**
+     *
+     */
+    public static final String APP_VERSION = "3.81";
+
     private static final LocaleResources m_resources;
     
     static {
@@ -44,10 +54,21 @@ public class AppLocal {
     private AppLocal() {
     }
     
+    /**
+     *
+     * @param sKey
+     * @return
+     */
     public static String getIntString(String sKey) {
         return m_resources.getString(sKey);
     }
     
+    /**
+     *
+     * @param sKey
+     * @param sValues
+     * @return
+     */
     public static String getIntString(String sKey, Object ... sValues) {
         return m_resources.getString(sKey, sValues);
     }

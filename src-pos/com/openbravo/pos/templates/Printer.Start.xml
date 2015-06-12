@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- 
     uniCenta oPOS - Touch friendly Point Of Sale
-    Copyright (c) 2009-2011 uniCenta.
+    Copyright (c) 2009-2014 uniCenta.
     http://sourceforge.net/projects/unicentaopos
 
     This file is part of uniCenta oPOS.
@@ -21,12 +21,17 @@
  -->
 
 <output>
-    <display animation="scroll">
+<!-- DISPLAY ANIMATION OPTIONS -->
+             <display animation="flyer">
+<!--            <display animation="scroll"> -->
+<!--            <display animation="blink"> -->
+<!--            <display animation="curtain"> -->
+<!--            <display animation="none"> -->
         <line>
             <text>uniCenta oPOS</text>
         </line>
         <line>
-            <text>   Touch Friendly Point Of Sale   </text>
+            <text>Point Of Sale</text>
         </line>
     </display>
 </output>

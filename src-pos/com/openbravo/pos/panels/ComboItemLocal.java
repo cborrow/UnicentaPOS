@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (c) 2009-2011 uniCenta
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta & previous Openbravo POS works
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -30,19 +30,43 @@ import com.openbravo.pos.forms.AppLocal;
  */
 public class ComboItemLocal implements IKeyed {
 
+    /**
+     *
+     */
     protected Integer m_iKey;
+
+    /**
+     *
+     */
     protected String m_sKeyValue;
 
+    /**
+     *
+     * @param iKey
+     * @param sKeyValue
+     */
     public ComboItemLocal(Integer iKey, String sKeyValue) {
         m_iKey = iKey;
         m_sKeyValue = sKeyValue;
     }
+
+    /**
+     *
+     * @return
+     */
+    @Override
     public Object getKey() {
         return m_iKey;
     }
+
+    /**
+     *
+     * @return
+     */
     public Object getValue() {
         return m_sKeyValue;
     }
+    @Override
     public String toString() {
         return AppLocal.getIntString(m_sKeyValue);
     }

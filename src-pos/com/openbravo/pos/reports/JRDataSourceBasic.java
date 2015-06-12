@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (c) 2009-2011 uniCenta
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta & previous Openbravo POS works
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -19,16 +19,18 @@
 
 package com.openbravo.pos.reports;
 
-import com.openbravo.pos.forms.AppLocal;
-
-import net.sf.jasperreports.engine.JRDataSource;
-import net.sf.jasperreports.engine.JRField;
-import net.sf.jasperreports.engine.JRException;
-
-import com.openbravo.data.loader.BaseSentence;
 import com.openbravo.basic.BasicException;
+import com.openbravo.data.loader.BaseSentence;
 import com.openbravo.data.loader.DataResultSet;
+import com.openbravo.pos.forms.AppLocal;
+import net.sf.jasperreports.engine.JRDataSource;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JRField;
 
+/**
+ *
+ * @author JG uniCenta
+ */
 public class JRDataSourceBasic implements JRDataSource {
     
     private BaseSentence sent;
@@ -37,7 +39,11 @@ public class JRDataSourceBasic implements JRDataSource {
     
     private ReportFields m_fields = null;
     
-    /** Creates a new instance of JRDataSourceBasic */
+    /** Creates a new instance of JRDataSourceBasic
+     * @param sent
+     * @param fields
+     * @param params
+     * @throws com.openbravo.basic.BasicException */
     public JRDataSourceBasic(BaseSentence sent, ReportFields fields, Object params) throws BasicException  {   
         
         this.sent = sent;
@@ -45,6 +51,13 @@ public class JRDataSourceBasic implements JRDataSource {
         m_fields = fields;
     }
     
+    /**
+     *
+     * @param jrField
+     * @return
+     * @throws JRException
+     */
+    @Override
     public Object getFieldValue(JRField jrField) throws JRException {
         
         try {
@@ -54,6 +67,12 @@ public class JRDataSourceBasic implements JRDataSource {
         }
     }
     
+    /**
+     *
+     * @return
+     * @throws JRException
+     */
+    @Override
     public boolean next() throws JRException {
         
         if (SRS == null) {

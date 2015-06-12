@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (C) 2008-2009 Openbravo, S.L.
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta & previous Openbravo POS works
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -19,21 +19,25 @@
 
 package com.openbravo.pos.inventory;
 
+import com.openbravo.basic.BasicException;
+import com.openbravo.data.user.DirtyManager;
+import com.openbravo.data.user.EditorRecord;
+import com.openbravo.format.Formats;
+import com.openbravo.pos.forms.AppLocal;
 import java.awt.Component;
 import java.util.UUID;
-import javax.swing.*;
+import javax.swing.JPanel;
 
-import com.openbravo.format.Formats;
-import com.openbravo.basic.BasicException;
-import com.openbravo.data.user.EditorRecord;
-import com.openbravo.data.user.DirtyManager;
-import com.openbravo.pos.forms.AppLocal;
-
-public class TaxCategoriesEditor extends JPanel implements EditorRecord {
+/**
+ *
+ * @author JG uniCenta
+ */
+public final class TaxCategoriesEditor extends JPanel implements EditorRecord {
     
     private Object m_oId;
     
-    /** Creates new form taxEditor */
+    /** Creates new form taxEditor
+     * @param dirty */
     public TaxCategoriesEditor(DirtyManager dirty) {
         initComponents();
 
@@ -41,16 +45,32 @@ public class TaxCategoriesEditor extends JPanel implements EditorRecord {
         
         writeValueEOF();
     }
+
+    /**
+     *
+     */
+    @Override
     public void writeValueEOF() {
         m_oId = null;
         m_jName.setText(null);
         m_jName.setEnabled(false);
     }
+
+    /**
+     *
+     */
+    @Override
     public void writeValueInsert() {
         m_oId = UUID.randomUUID().toString();
         m_jName.setText(null);
         m_jName.setEnabled(true);
     }
+
+    /**
+     *
+     * @param value
+     */
+    @Override
     public void writeValueDelete(Object value) {
 
         Object[] taxcustcat = (Object[]) value;
@@ -58,6 +78,12 @@ public class TaxCategoriesEditor extends JPanel implements EditorRecord {
         m_jName.setText(Formats.STRING.formatValue(taxcustcat[1]));
         m_jName.setEnabled(false);
     }    
+
+    /**
+     *
+     * @param value
+     */
+    @Override
     public void writeValueEdit(Object value) {
 
         Object[] taxcustcat = (Object[]) value;
@@ -66,6 +92,12 @@ public class TaxCategoriesEditor extends JPanel implements EditorRecord {
         m_jName.setEnabled(true);
     }
 
+    /**
+     *
+     * @return
+     * @throws BasicException
+     */
+    @Override
     public Object createValue() throws BasicException {
         
         Object[] taxcustcat = new Object[2];
@@ -74,12 +106,21 @@ public class TaxCategoriesEditor extends JPanel implements EditorRecord {
         taxcustcat[1] = m_jName.getText();
 
         return taxcustcat;
-    }    
-     
+    }
+
+    /**
+     *
+     * @return
+     */
+    @Override
     public Component getComponent() {
         return this;
     }
     
+    /**
+     *
+     */
+    @Override
     public void refresh() {
     }
     
@@ -95,7 +136,10 @@ public class TaxCategoriesEditor extends JPanel implements EditorRecord {
         jLabel2 = new javax.swing.JLabel();
         m_jName = new javax.swing.JTextField();
 
+        jLabel2.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel2.setText(AppLocal.getIntString("Label.Name")); // NOI18N
+
+        m_jName.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -113,8 +157,8 @@ public class TaxCategoriesEditor extends JPanel implements EditorRecord {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(m_jName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(m_jName, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents

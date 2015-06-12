@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
 //    Copyright (C) 2008-2009 Openbravo, S.L.
-//    http://www.unicenta.net/unicentaopos
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -20,26 +20,35 @@
 
 package com.openbravo.pos.payment;
 
+import com.openbravo.format.Formats;
+import com.openbravo.pos.customers.CustomerInfoExt;
+import com.openbravo.pos.forms.AppConfig;
+import com.openbravo.pos.forms.AppLocal;
+import com.openbravo.pos.util.RoundUtils;
 import java.awt.Component;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import com.openbravo.format.Formats;
-import com.openbravo.pos.customers.CustomerInfoExt;
-import com.openbravo.pos.forms.AppLocal;
-import com.openbravo.pos.util.RoundUtils;
+import java.io.File;
 
+/**
+ *
+ * @author JG uniCenta
+ */
 public class JPaymentPaper extends javax.swing.JPanel implements JPaymentInterface {
     
     private JPaymentNotifier m_notifier;
     
     private double m_dTicket;
-    private double m_dTotal;    
+    private double m_dTotal;  
+    private Boolean priceWith00;
     
     private String m_sPaper; // "paperin", "paperout"
     // private String m_sCustomer; 
     
     
-    /** Creates new form JPaymentTicket */
+    /** Creates new form JPaymentTicket
+     * @param notifier
+     * @param sPaper */
     public JPaymentPaper(JPaymentNotifier notifier, String sPaper) {
         
         m_notifier = notifier;
@@ -49,8 +58,27 @@ public class JPaymentPaper extends javax.swing.JPanel implements JPaymentInterfa
         
         m_jTendered.addPropertyChangeListener("Edition", new RecalculateState());
         m_jTendered.addEditorKeys(m_jKeys);
+        
+        
+ /* added JDL 11.05.13        
+        AppConfig m_config =  new AppConfig(new File((System.getProperty("user.home")), AppLocal.APP_ID + ".properties"));        
+        m_config.load();        
+        priceWith00 =("true".equals(m_config.getProperty("till.pricewith00")));
+        if (priceWith00) {
+            // use '00' instead of '.'
+            m_jKeys.dotIs00(true);
+        }
+        m_config=null;
+*/        
     }
     
+    /**
+     *
+     * @param customerext
+     * @param dTotal
+     * @param transID
+     */
+    @Override
     public void activate(CustomerInfoExt customerext, double dTotal, String transID) {
         
         m_dTotal = dTotal;
@@ -61,10 +89,20 @@ public class JPaymentPaper extends javax.swing.JPanel implements JPaymentInterfa
         printState();        
     }
     
+    /**
+     *
+     * @return
+     */
+    @Override
     public Component getComponent() {
         return this;
     }
     
+    /**
+     *
+     * @return
+     */
+    @Override
     public PaymentInfo executePayment() {
 
         return new PaymentInfoTicket(m_dTicket, m_sPaper);
@@ -88,6 +126,7 @@ public class JPaymentPaper extends javax.swing.JPanel implements JPaymentInterfa
     }
     
     private class RecalculateState implements PropertyChangeListener {
+        @Override
         public void propertyChange(PropertyChangeEvent evt) {
             printState();
         }
@@ -114,17 +153,20 @@ public class JPaymentPaper extends javax.swing.JPanel implements JPaymentInterfa
 
         jPanel4.setLayout(null);
 
+        jLabel1.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
         jLabel1.setText(AppLocal.getIntString("Label.InputCash")); // NOI18N
+        jLabel1.setPreferredSize(new java.awt.Dimension(100, 30));
         jPanel4.add(jLabel1);
-        jLabel1.setBounds(20, 20, 100, 15);
+        jLabel1.setBounds(10, 4, 100, 30);
 
-        m_jMoneyEuros.setBackground(new java.awt.Color(153, 153, 255));
+        m_jMoneyEuros.setBackground(new java.awt.Color(204, 255, 51));
+        m_jMoneyEuros.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
         m_jMoneyEuros.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         m_jMoneyEuros.setBorder(javax.swing.BorderFactory.createCompoundBorder(javax.swing.BorderFactory.createLineBorder(javax.swing.UIManager.getDefaults().getColor("Button.darkShadow")), javax.swing.BorderFactory.createEmptyBorder(1, 4, 1, 4)));
         m_jMoneyEuros.setOpaque(true);
-        m_jMoneyEuros.setPreferredSize(new java.awt.Dimension(150, 25));
+        m_jMoneyEuros.setPreferredSize(new java.awt.Dimension(180, 30));
         jPanel4.add(m_jMoneyEuros);
-        m_jMoneyEuros.setBounds(120, 20, 150, 25);
+        m_jMoneyEuros.setBounds(120, 4, 180, 30);
 
         add(jPanel4, java.awt.BorderLayout.CENTER);
 
@@ -135,6 +177,8 @@ public class JPaymentPaper extends javax.swing.JPanel implements JPaymentInterfa
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
         jPanel1.setLayout(new java.awt.BorderLayout());
+
+        m_jTendered.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jPanel1.add(m_jTendered, java.awt.BorderLayout.CENTER);
 
         jPanel12.add(jPanel1);

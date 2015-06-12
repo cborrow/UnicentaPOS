@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (c) 2009-2011 uniCenta
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta & previous Openbravo POS works
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -19,17 +19,8 @@
 
 package com.openbravo.pos.inventory;
 
-import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import com.openbravo.basic.BasicException;
-import com.openbravo.data.loader.DataRead;
-import com.openbravo.data.loader.Datas;
-import com.openbravo.data.loader.PreparedSentence;
-import com.openbravo.data.loader.SentenceExec;
-import com.openbravo.data.loader.SentenceExecTransaction;
-import com.openbravo.data.loader.SerializerRead;
-import com.openbravo.data.loader.SerializerWriteBasicExt;
+import com.openbravo.data.loader.*;
 import com.openbravo.data.model.Field;
 import com.openbravo.data.model.Row;
 import com.openbravo.data.user.EditorRecord;
@@ -39,6 +30,9 @@ import com.openbravo.format.Formats;
 import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.panels.JPanelTable2;
 import com.openbravo.pos.reports.JParamsLocation;
+import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.UUID;
 
 /**
@@ -54,6 +48,10 @@ public class ProductsWarehousePanel extends JPanelTable2 {
     public ProductsWarehousePanel() {
     }
 
+    /**
+     *
+     */
+    @Override
     protected void init() {   
                
         m_paramslocation =  new JParamsLocation();
@@ -85,6 +83,7 @@ public class ProductsWarehousePanel extends JPanelTable2 {
         
         
         SentenceExec updatesent =  new SentenceExecTransaction(app.getSession()) {
+            @Override
             public int execInTransaction(Object params) throws BasicException {
                 Object[] values = (Object[]) params;
                 if (values[0] == null)  {
@@ -107,28 +106,46 @@ public class ProductsWarehousePanel extends JPanelTable2 {
         jeditor = new ProductsWarehouseEditor(dirty);   
     }
 
-       
+    /**
+     *
+     * @return
+     */
     @Override
     public Component getFilter() {
         return m_paramslocation.getComponent();
-    }  
-    
+    }
+
+    /**
+     *
+     * @return
+     */
+    @Override
     public EditorRecord getEditor() {
         return jeditor;
-    }  
-    
+    }
+
+    /**
+     *
+     * @throws BasicException
+     */
     @Override
     public void activate() throws BasicException {
         
         m_paramslocation.activate(); 
         super.activate();
-    }     
-    
+    }
+
+    /**
+     *
+     * @return
+     */
+    @Override
     public String getTitle() {
         return AppLocal.getIntString("Menu.ProductsWarehouse");
     }      
     
     private class ReloadActionListener implements ActionListener {
+        @Override
         public void actionPerformed(ActionEvent e) {
             try {
                 ProductsWarehousePanel.this.bd.actionLoad();
@@ -138,6 +155,7 @@ public class ProductsWarehousePanel extends JPanelTable2 {
     }
 
     private class WarehouseSerializerRead implements SerializerRead {
+        @Override
         public Object readValues(DataRead dr) throws BasicException {
             return new Object[] {
                 dr.getString(1),

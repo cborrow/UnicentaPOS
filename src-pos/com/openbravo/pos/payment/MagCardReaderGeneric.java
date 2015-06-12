@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (c) 2009-2011 uniCenta
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -21,16 +21,21 @@ package com.openbravo.pos.payment;
 
 import com.openbravo.pos.util.LuhnAlgorithm;
 import com.openbravo.pos.util.StringUtils;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-public class MagCardReaderGeneric implements MagCardReader {
+/**
+ *
+ * @author JG uniCenta
+ */
+public final class MagCardReaderGeneric implements MagCardReader {
     
     private String m_sHolderName;
     private String m_sCardNumber;
     private String m_sExpirationDate;
-    private StringBuffer track1;
-    private StringBuffer track2;
-    private StringBuffer track3;
+    private StringBuilder track1;
+    private StringBuilder track2;
+    private StringBuilder track3;
     
     private static final int READING_STARTSENTINEL1 = 0;
     private static final int READING_STARTSENTINEL2 = 1;
@@ -45,7 +50,7 @@ public class MagCardReaderGeneric implements MagCardReader {
     private List m_aTrack1;
     private List m_aTrack2;
     private List m_aTrack3;
-    private StringBuffer m_sField;
+    private StringBuilder m_sField;
     private char m_cCardType;
     
     /** Creates a new instance of GenericMagCardReader */
@@ -53,10 +58,19 @@ public class MagCardReaderGeneric implements MagCardReader {
         reset();
     }
  
+    /**
+     *
+     * @return
+     */
+    @Override
     public String getReaderName() {
         return "Generic magnetic card reader";
     }
     
+    /**
+     *
+     */
+    @Override
     public void reset() {
         m_aTrack1 = null;
         m_aTrack2 = null;        
@@ -70,6 +84,11 @@ public class MagCardReaderGeneric implements MagCardReader {
         m_iAutomState = READING_STARTSENTINEL1;
     }
     
+    /**
+     *
+     * @param c
+     */
+    @Override
     public void appendChar(char c) {
         // Mastercard
         // %B1111222233334444^PUBLIC/JOHN?;1111222233334444=99121010000000000000?
@@ -79,13 +98,13 @@ public class MagCardReaderGeneric implements MagCardReader {
         //  *---------------- ----------- ----                                       ***
         
         if (c == '%') { // && READING_STARTSENTINEL1;
-            track1 = new StringBuffer();
-            track2 = new StringBuffer();
-            track3 = new StringBuffer();
+            track1 = new StringBuilder();
+            track2 = new StringBuilder();
+            track3 = new StringBuilder();
             m_aTrack1 = new ArrayList();
             m_aTrack2 = null;     
             m_aTrack3 = null;        
-            m_sField = new StringBuffer();
+            m_sField = new StringBuilder();
             m_cCardType = ' ';
             m_sHolderName = null;
             m_sCardNumber = null;
@@ -96,22 +115,22 @@ public class MagCardReaderGeneric implements MagCardReader {
             m_iAutomState = READING_TRACK1;
         } else if (c == ';' && m_iAutomState == READING_STARTSENTINEL2) {
             m_aTrack2 = new ArrayList();        
-            m_sField = new StringBuffer();
+            m_sField = new StringBuilder();
             m_iAutomState = READING_TRACK2;
         } else if (c == ';' && m_iAutomState == READING_STARTSENTINEL3) {
             m_aTrack3 = new ArrayList();        
-            m_sField = new StringBuffer();
+            m_sField = new StringBuilder();
             m_iAutomState = READING_TRACK3;
             
         } else if (c == '^' && m_iAutomState == READING_TRACK1) {
             m_aTrack1.add(m_sField.toString());
-            m_sField = new StringBuffer();
+            m_sField = new StringBuilder();
         } else if (c == '=' && m_iAutomState == READING_TRACK2) {
             m_aTrack2.add(m_sField.toString());
-            m_sField = new StringBuffer();
+            m_sField = new StringBuilder();
         } else if (c == '=' && m_iAutomState == READING_TRACK3) {
             m_aTrack3.add(m_sField.toString());
-            m_sField = new StringBuffer();
+            m_sField = new StringBuilder();
         
         } else if (c == '?' && m_iAutomState == READING_TRACK1) {
             m_aTrack1.add(m_sField.toString());
@@ -144,7 +163,9 @@ public class MagCardReaderGeneric implements MagCardReader {
     private void checkTracks() {
         
         // Test del tipo de tarjeta
-        if (m_cCardType != 'B') return;
+        if (m_cCardType != 'B') {
+            return;
+        }
         
         // Lectura de los valores
         String sCardNumber1 = (m_aTrack1 == null || m_aTrack1.size() < 1) ? null : (String) m_aTrack1.get(0);
@@ -154,11 +175,17 @@ public class MagCardReaderGeneric implements MagCardReader {
         String sExpDate2 =  (m_aTrack2 == null || m_aTrack2.size() < 2) ? null : ((String) m_aTrack2.get(1)).substring(0, 4);
             
         // Test del numero de tarjeta
-        if (!checkCardNumber(sCardNumber1) || (sCardNumber2 != null && !sCardNumber1.equals(sCardNumber2))) return;
+        if (!checkCardNumber(sCardNumber1) || (sCardNumber2 != null && !sCardNumber1.equals(sCardNumber2))) {
+            return;
+        }
         // Test del nombre del propietario
-        if (sHolderName == null) return;
+        if (sHolderName == null) {
+            return;
+        }
         // Test de la fecha de expiracion
-        if ((sExpDate1 != null || !checkExpDate(sExpDate2)) && (!checkExpDate(sExpDate1) || !sExpDate1.equals(sExpDate2))) return;
+        if ((sExpDate1 != null || !checkExpDate(sExpDate2)) && (!checkExpDate(sExpDate1) || !sExpDate1.equals(sExpDate2))) {
+            return;
+        }
 
         m_sCardNumber = sCardNumber1;
         m_sHolderName = formatHolderName(sHolderName);
@@ -184,24 +211,65 @@ public class MagCardReaderGeneric implements MagCardReader {
         } 
     }
     
+    /**
+     *
+     * @return
+     */
+    @Override
     public boolean isComplete() {
         return m_sCardNumber != null;
     }    
+
+    /**
+     *
+     * @return
+     */
+    @Override
     public String getHolderName() {
         return m_sHolderName;
     }
+
+    /**
+     *
+     * @return
+     */
+    @Override
     public String getCardNumber() {
         return m_sCardNumber;
     }
+
+    /**
+     *
+     * @return
+     */
+    @Override
     public String getExpirationDate() {
         return m_sExpirationDate;
     }   
+
+    /**
+     *
+     * @return
+     */
+    @Override
     public String getTrack1() {
         return track1 == null ? null : track1.toString();
     }
+
+    /**
+     *
+     * @return
+     */
+    @Override
     public String getTrack2() {
         return track2 == null ? null : track2.toString();
     }    
+
+    /**
+     *
+     * @return
+     */
+    @Override
     public String getTrack3() {
         return track3 == null ? null : track3.toString();
     }      

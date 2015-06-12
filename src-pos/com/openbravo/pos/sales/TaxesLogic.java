@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (C) 2008-2009 Openbravo, S.L.
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta & previous Openbravo POS works
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -42,15 +42,22 @@ public class TaxesLogic {
     
     private Map<String, TaxesLogicElement> taxtrees;
     
+    /**
+     *
+     * @param taxlist
+     */
     public TaxesLogic(List<TaxInfo> taxlist) {
         this.taxlist = taxlist;
       
-        taxtrees = new HashMap<String, TaxesLogicElement>();
+// JG June 2013 use diamond inference
+        taxtrees = new HashMap<>();
                 
         // Order the taxlist by Application Order...
-        List<TaxInfo> taxlistordered = new ArrayList<TaxInfo>();
+        // JG June 2013 use diamond inference        
+        List<TaxInfo> taxlistordered = new ArrayList<>();
         taxlistordered.addAll(taxlist);
         Collections.sort(taxlistordered, new Comparator<TaxInfo>() {
+            @Override
             public int compare(TaxInfo o1, TaxInfo o2) {
                 if (o1.getApplicationOrder() < o2.getApplicationOrder()) {
                     return -1;
@@ -63,7 +70,8 @@ public class TaxesLogic {
         });
         
         // Generate the taxtrees
-        HashMap<String, TaxesLogicElement> taxorphans = new HashMap<String, TaxesLogicElement>();
+        // JG June 2013 use diamond inference        
+        HashMap<String, TaxesLogicElement> taxorphans = new HashMap<>();
         
         for (TaxInfo t : taxlistordered) {
                        
@@ -96,9 +104,15 @@ public class TaxesLogic {
         }
     }
     
+    /**
+     *
+     * @param ticket
+     * @throws TaxesException
+     */
     public void calculateTaxes(TicketInfo ticket) throws TaxesException {
   
-        List<TicketTaxInfo> tickettaxes = new ArrayList<TicketTaxInfo>(); 
+        // JG June 2013 use diamond inference
+        List<TicketTaxInfo> tickettaxes = new ArrayList<>(); 
         
         for (TicketLineInfo line: ticket.getLines()) {
             tickettaxes = sumLineTaxes(tickettaxes, calculateTaxes(line));
@@ -107,6 +121,12 @@ public class TaxesLogic {
         ticket.setTaxes(tickettaxes);
     }
     
+    /**
+     *
+     * @param line
+     * @return
+     * @throws TaxesException
+     */
     public List<TicketTaxInfo> calculateTaxes(TicketLineInfo line) throws TaxesException {
         
         TaxesLogicElement taxesapplied = getTaxesApplied(line.getTaxInfo());
@@ -115,7 +135,8 @@ public class TaxesLogic {
     
     private List<TicketTaxInfo> calculateLineTaxes(double base, TaxesLogicElement taxesapplied) {
  
-        List<TicketTaxInfo> linetaxes = new ArrayList<TicketTaxInfo>();
+        // JG June 2013 use diamond inference
+        List<TicketTaxInfo> linetaxes = new ArrayList<>();
         
         if (taxesapplied.getSons().isEmpty()) {           
             TicketTaxInfo tickettax = new TicketTaxInfo(taxesapplied.getTax());
@@ -180,14 +201,30 @@ public class TaxesLogic {
         return null;
     }
     
+    /**
+     *
+     * @param tcid
+     * @return
+     */
     public double getTaxRate(String tcid) {
         return getTaxRate(tcid, null);
     }
     
+    /**
+     *
+     * @param tc
+     * @return
+     */
     public double getTaxRate(TaxCategoryInfo tc) {
         return getTaxRate(tc, null);
     }
     
+    /**
+     *
+     * @param tc
+     * @param customer
+     * @return
+     */
     public double getTaxRate(TaxCategoryInfo tc, CustomerInfoExt customer) {
         
         if (tc == null) {
@@ -197,6 +234,12 @@ public class TaxesLogic {
         }
     }
     
+    /**
+     *
+     * @param tcid
+     * @param customer
+     * @return
+     */
     public double getTaxRate(String tcid, CustomerInfoExt customer) {
         
         if (tcid == null) {
@@ -211,18 +254,40 @@ public class TaxesLogic {
         }
     }
     
+    /**
+     *
+     * @param tcid
+     * @return
+     */
     public TaxInfo getTaxInfo(String tcid) {
         return getTaxInfo(tcid, null);
     }
     
+    /**
+     *
+     * @param tc
+     * @return
+     */
     public TaxInfo getTaxInfo(TaxCategoryInfo tc) {
         return getTaxInfo(tc.getID(), null);
     }
     
+    /**
+     *
+     * @param tc
+     * @param customer
+     * @return
+     */
     public TaxInfo getTaxInfo(TaxCategoryInfo tc, CustomerInfoExt customer) {  
         return getTaxInfo(tc.getID(), customer);
-    }    
-    
+    }
+
+    /**
+     *
+     * @param tcid
+     * @param customer
+     * @return
+     */
     public TaxInfo getTaxInfo(String tcid, CustomerInfoExt customer) {
         
         

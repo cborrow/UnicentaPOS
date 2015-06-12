@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (c) 2009-2011 uniCenta
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta & previous Openbravo POS works
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -31,12 +31,27 @@ public abstract class BeanFactoryDataSingle implements BeanFactoryApp {
     public BeanFactoryDataSingle() {
     }
     
+    /**
+     *
+     * @param s
+     */
     public abstract void init(Session s);
 
+    /**
+     *
+     * @param app
+     * @throws BeanFactoryException
+     */
+    @Override
     public void init(AppView app) throws BeanFactoryException {        
         init(app.getSession());                     
-    }   
-    
+    }
+
+    /**
+     *
+     * @return
+     */
+    @Override
     public Object getBean() {
         return this;
     }  

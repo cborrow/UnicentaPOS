@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (c) 2009-2011 uniCenta
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta & previous Openbravo POS works
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -40,30 +40,58 @@ public class StockDiaryPanel extends JPanelTable {
     public StockDiaryPanel() {
     }
     
+    /**
+     *
+     */
+    @Override
     protected void init() {
         m_dlSales = (DataLogicSales) app.getBean("com.openbravo.pos.forms.DataLogicSales");
         jeditor = new StockDiaryEditor(app, dirty); 
     }
     
+    /**
+     *
+     * @return
+     */
+    @Override
     public ListProvider getListProvider() {
         return null;
     }
     
+    /**
+     *
+     * @return
+     */
+    @Override
     public SaveProvider getSaveProvider() {
         return  new SaveProvider(null
                 , m_dlSales.getStockDiaryInsert()
                 , m_dlSales.getStockDiaryDelete());      
     }
     
+    /**
+     *
+     * @return
+     */
+    @Override
     public EditorRecord getEditor() {
         return jeditor;
     }
     
+    /**
+     *
+     * @return
+     */
+    @Override
     public String getTitle() {
         return AppLocal.getIntString("Menu.StockDiary");
-    }     
-    
-        
+    }
+
+    /**
+     *
+     * @throws BasicException
+     */
+    @Override
     public void activate() throws BasicException {
         jeditor.activate(); // primero activo el editor 
         super.activate();   // segundo activo el padre        

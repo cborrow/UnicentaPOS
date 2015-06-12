@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (c) 2009-2011 uniCenta
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta & previous Openbravo POS works
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -19,16 +19,21 @@
 
 package com.openbravo.data.gui;
 
-import javax.swing.*;
-import com.openbravo.data.user.DirtyManager;
 import com.openbravo.data.user.DirtyListener;
+import com.openbravo.data.user.DirtyManager;
+import javax.swing.*;
 
+/**
+ *
+ * @author JG uniCenta
+ */
 public class JLabelDirty extends JLabel {
     
     private static Icon m_IconModif = null;
     private static Icon m_IconNull = null;
 
-    /** Creates a new instance of JDirtyPicture */
+    /** Creates a new instance of JDirtyPicture
+     * @param dm */
     public JLabelDirty(DirtyManager dm) {
         
         if (m_IconModif == null) {

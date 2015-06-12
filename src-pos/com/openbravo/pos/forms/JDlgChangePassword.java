@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (c) 2009-2011 uniCenta
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -19,11 +19,14 @@
 
 package com.openbravo.pos.forms;
 
-import javax.swing.*;
-import java.awt.*;
 import com.openbravo.data.gui.JMessageDialog;
 import com.openbravo.data.gui.MessageInf;
 import com.openbravo.pos.util.Hashcypher;
+import java.awt.Component;
+import java.awt.Dialog;
+import java.awt.Frame;
+import java.awt.Window;
+import javax.swing.JFrame;
 
 /**
  *
@@ -67,8 +70,14 @@ public class JDlgChangePassword extends javax.swing.JDialog {
         } else {
             return getWindow(parent.getParent());
         }
-    }    
-    
+    }
+
+    /**
+     *
+     * @param parent
+     * @param sOldPassword
+     * @return
+     */
     public static String showMessage(Component parent, String sOldPassword) {
          
         Window window = getWindow(parent);      
@@ -107,6 +116,7 @@ public class JDlgChangePassword extends javax.swing.JDialog {
 
         jPanel2.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
 
+        jcmdOK.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jcmdOK.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/ok.png"))); // NOI18N
         jcmdOK.setText(AppLocal.getIntString("Button.OK")); // NOI18N
         jcmdOK.addActionListener(new java.awt.event.ActionListener() {
@@ -116,6 +126,7 @@ public class JDlgChangePassword extends javax.swing.JDialog {
         });
         jPanel2.add(jcmdOK);
 
+        jcmdCancel.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jcmdCancel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/cancel.png"))); // NOI18N
         jcmdCancel.setText(AppLocal.getIntString("Button.Cancel")); // NOI18N
         jcmdCancel.addActionListener(new java.awt.event.ActionListener() {
@@ -128,25 +139,35 @@ public class JDlgChangePassword extends javax.swing.JDialog {
         getContentPane().add(jPanel2, java.awt.BorderLayout.SOUTH);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        jPanel1.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         jPanel1.setLayout(null);
 
+        jLabel1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel1.setText(AppLocal.getIntString("label.passwordold")); // NOI18N
         jPanel1.add(jLabel1);
-        jLabel1.setBounds(20, 20, 120, 14);
-        jPanel1.add(jtxtPasswordOld);
-        jtxtPasswordOld.setBounds(140, 20, 180, 20);
+        jLabel1.setBounds(20, 20, 120, 25);
 
+        jtxtPasswordOld.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        jPanel1.add(jtxtPasswordOld);
+        jtxtPasswordOld.setBounds(140, 20, 180, 25);
+
+        jLabel2.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel2.setText(AppLocal.getIntString("label.passwordnew")); // NOI18N
         jPanel1.add(jLabel2);
-        jLabel2.setBounds(20, 50, 120, 14);
-        jPanel1.add(jtxtPasswordNew);
-        jtxtPasswordNew.setBounds(140, 50, 180, 20);
-        jPanel1.add(jtxtPasswordRepeat);
-        jtxtPasswordRepeat.setBounds(140, 80, 180, 20);
+        jLabel2.setBounds(20, 50, 120, 25);
 
+        jtxtPasswordNew.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        jPanel1.add(jtxtPasswordNew);
+        jtxtPasswordNew.setBounds(140, 50, 180, 25);
+
+        jtxtPasswordRepeat.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        jPanel1.add(jtxtPasswordRepeat);
+        jtxtPasswordRepeat.setBounds(140, 80, 180, 25);
+
+        jLabel3.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel3.setText(AppLocal.getIntString("label.passwordrepeat")); // NOI18N
         jPanel1.add(jLabel3);
-        jLabel3.setBounds(20, 80, 120, 14);
+        jLabel3.setBounds(20, 80, 120, 25);
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.CENTER);
 

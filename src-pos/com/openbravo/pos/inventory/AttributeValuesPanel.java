@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (C) 2008-2009 Openbravo, S.L.
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta & previous Openbravo POS works
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -21,11 +21,7 @@ package com.openbravo.pos.inventory;
 
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.loader.Datas;
-import com.openbravo.data.model.Column;
-import com.openbravo.data.model.Field;
-import com.openbravo.data.model.PrimaryKey;
-import com.openbravo.data.model.Row;
-import com.openbravo.data.model.Table;
+import com.openbravo.data.model.*;
 import com.openbravo.data.user.EditorRecord;
 import com.openbravo.format.Formats;
 import com.openbravo.pos.forms.AppLocal;
@@ -43,6 +39,10 @@ public class AttributeValuesPanel extends JPanelTable2 {
     private AttributeValuesEditor editor;
     private AttributeFilter filter;
 
+    /**
+     *
+     */
+    @Override
     protected void init() {
 
         filter = new AttributeFilter();
@@ -68,6 +68,10 @@ public class AttributeValuesPanel extends JPanelTable2 {
         editor = new AttributeValuesEditor(dirty);
     }
 
+    /**
+     *
+     * @throws BasicException
+     */
     @Override
     public void activate() throws BasicException {
         filter.activate();
@@ -77,11 +81,20 @@ public class AttributeValuesPanel extends JPanelTable2 {
         reload();
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public Component getFilter(){
         return filter.getComponent();
     }
 
+    /**
+     *
+     * @return
+     */
+    @Override
     public EditorRecord getEditor() {
         return editor;
     }
@@ -94,6 +107,11 @@ public class AttributeValuesPanel extends JPanelTable2 {
         bd.actionLoad();
     }
 
+    /**
+     *
+     * @return
+     */
+    @Override
     public String getTitle() {
         return AppLocal.getIntString("Menu.AttributeValues");
     }

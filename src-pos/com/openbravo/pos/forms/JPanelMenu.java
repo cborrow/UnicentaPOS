@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (c) 2009-2011 uniCenta
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta & previous Openbravo POS works
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -19,10 +19,10 @@
 
 package com.openbravo.pos.forms;
 
-import javax.swing.JComponent;
-import javax.swing.JPanel;
 import com.openbravo.basic.BasicException;
 import java.awt.Component;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
 
 /**
  *
@@ -33,7 +33,8 @@ public class JPanelMenu extends JPanel implements JPanelView {
     private MenuDefinition m_menu;
     private boolean created = false;
     
-    /** Creates new form JStockMenu */
+    /** Creates new form JStockMenu
+     * @param menu */
     public JPanelMenu(MenuDefinition menu) {
         
         m_menu = menu;
@@ -42,14 +43,29 @@ public class JPanelMenu extends JPanel implements JPanelView {
         initComponents();       
     }
 
+    /**
+     *
+     * @return
+     */
+    @Override
     public JComponent getComponent() {
         return this;
     }
     
+    /**
+     *
+     * @return
+     */
+    @Override
     public String getTitle() {
         return m_menu.getTitle();
-    }  
-    
+    }
+
+    /**
+     *
+     * @throws BasicException
+     */
+    @Override
     public void activate() throws BasicException {
         
         if (created == false) {
@@ -60,12 +76,21 @@ public class JPanelMenu extends JPanel implements JPanelView {
             }            
             created = true;
         }
-    }    
-    
+    }
+
+    /**
+     *
+     * @return
+     */
+    @Override
     public boolean deactivate() {  
         return true;
     }
     
+    /**
+     *
+     * @param title
+     */
     public void addTitle(Component title) {
         
         currententrypanel = null;
@@ -78,6 +103,10 @@ public class JPanelMenu extends JPanel implements JPanelView {
         menucontainer.add(titlepanel);
     }
     
+    /**
+     *
+     * @param entry
+     */
     public void addEntry(Component entry) {
         
         if (currententrypanel == null) {
@@ -104,6 +133,7 @@ public class JPanelMenu extends JPanel implements JPanelView {
         menucontainer = new javax.swing.JPanel();
 
         setBorder(javax.swing.BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         setLayout(new java.awt.BorderLayout());
 
         menucontainer.setLayout(new javax.swing.BoxLayout(menucontainer, javax.swing.BoxLayout.Y_AXIS));

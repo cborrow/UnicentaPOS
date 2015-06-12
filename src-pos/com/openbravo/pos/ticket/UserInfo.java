@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (c) 2009-2011 uniCenta
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -27,19 +27,29 @@ import java.io.Serializable;
 public class UserInfo implements Serializable {
 
     private static final long serialVersionUID = 7537578737839L;
-    private String m_sId;
-    private String m_sName;
+    private final String m_sId;
+    private final String m_sName;
 
-    /** Creates a new instance of UserInfoBasic */
+    /** Creates a new instance of UserInfoBasic
+     * @param id
+     * @param name */
     public UserInfo(String id, String name) {
         m_sId = id;
         m_sName = name;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getId() {
         return m_sId;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getName() {
         return m_sName;
     }

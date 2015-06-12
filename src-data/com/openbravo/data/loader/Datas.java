@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (c) 2009-2011 uniCenta
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta & previous Openbravo POS works
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -19,22 +19,65 @@
 
 package com.openbravo.data.loader;
 
+import com.openbravo.basic.BasicException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import com.openbravo.basic.BasicException;
 
+/**
+ *
+ * @author JG uniCenta
+ */
 public abstract class Datas {
     
+    /**
+     *
+     */
     public final static Datas INT = new DatasINT();
+
+    /**
+     *
+     */
     public final static Datas STRING = new DatasSTRING();
+
+    /**
+     *
+     */
     public final static Datas DOUBLE = new DatasDOUBLE();
+
+    /**
+     *
+     */
     public final static Datas BOOLEAN = new DatasBOOLEAN();
+
+    /**
+     *
+     */
     public final static Datas TIMESTAMP = new DatasTIMESTAMP();
+
+    /**
+     *
+     */
     public final static Datas BYTES = new DatasBYTES();
+
+    /**
+     *
+     */
     public final static Datas IMAGE = new DatasIMAGE();
     //public final static Datas INPUTSTREAM = new DatasINPUTSTREAM();
-    public final static Datas OBJECT = new DatasOBJECT();
+
+    /**
+     *
+     */
+        public final static Datas OBJECT = new DatasOBJECT();
+
+    /**
+     *
+     */
     public final static Datas SERIALIZABLE = new DatasSERIALIZABLE();
+
+    /**
+     *
+     */
     public final static Datas NULL = new DatasNULL();
     
     private static DateFormat tsf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS"); 
@@ -43,12 +86,50 @@ public abstract class Datas {
     private Datas() {
     }
     
+    /**
+     *
+     * @param dr
+     * @param i
+     * @return
+     * @throws BasicException
+     */
     public abstract Object getValue(DataRead dr, int i) throws BasicException;
+
+    /**
+     *
+     * @param dw
+     * @param i
+     * @param value
+     * @throws BasicException
+     */
     public abstract void setValue(DataWrite dw, int i, Object value) throws BasicException;
+
+    /**
+     *
+     * @return
+     */
     public abstract Class getClassValue();
+
+    /**
+     *
+     * @param value
+     * @return
+     */
     protected abstract String toStringAbstract(Object value);
+
+    /**
+     *
+     * @param o1
+     * @param o2
+     * @return
+     */
     protected abstract int compareAbstract(Object o1, Object o2);
     
+    /**
+     *
+     * @param value
+     * @return
+     */
     public String toString(Object value) {
         if (value == null) {
             return "null";
@@ -57,6 +138,12 @@ public abstract class Datas {
         }
     }
     
+    /**
+     *
+     * @param o1
+     * @param o2
+     * @return
+     */
     public int compare(Object o1, Object o2) {
         if (o1 == null) {
             if (o2 == null) {
@@ -174,18 +261,23 @@ public abstract class Datas {
         }   
     }    
     private static final class DatasIMAGE extends Datas {
+        @Override
         public Object getValue(DataRead dr, int i) throws BasicException {
             return ImageUtils.readImage(dr.getBytes(i));
         }
+        @Override
         public void setValue(DataWrite dw, int i, Object value) throws BasicException {
             dw.setBytes(i, ImageUtils.writeImage((java.awt.image.BufferedImage) value));
         }
+        @Override
         public Class getClassValue() {
             return java.awt.image.BufferedImage.class;
         }
+        @Override
         protected String toStringAbstract(Object value) {
             return "0x" + ImageUtils.bytes2hex(ImageUtils.writeImage((java.awt.image.BufferedImage) value));
         }
+        @Override
         protected int compareAbstract(Object o1, Object o2) {
             throw new UnsupportedOperationException();
         }   
@@ -196,7 +288,6 @@ public abstract class Datas {
 //            return b == null ? null : new java.io.ByteArrayInputStream(b);
 //        }
 //        public void setValue(DataWrite dw, int i, Object value) throws DataException {
-//            // TODO: Please implement this method
 //        }
 //    }  
     private static final class DatasOBJECT extends Datas {

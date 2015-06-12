@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (c) 2009-2011 uniCenta
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta & previous Openbravo POS works
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -19,19 +19,15 @@
 
 package com.openbravo.pos.reports;
 
-import com.openbravo.data.loader.SerializerWrite;
+import com.openbravo.basic.BasicException;
+import com.openbravo.data.gui.ComboBoxValModel;
+import com.openbravo.data.loader.*;
+import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.forms.AppView;
+import com.openbravo.pos.forms.DataLogicSales;
 import java.awt.Component;
 import java.awt.event.ActionListener;
 import java.util.List;
-import com.openbravo.basic.BasicException;
-import com.openbravo.data.gui.ComboBoxValModel;
-import com.openbravo.data.loader.Datas;
-import com.openbravo.data.loader.QBFCompareEnum;
-import com.openbravo.data.loader.SentenceList;
-import com.openbravo.data.loader.SerializerWriteBasic;
-import com.openbravo.pos.forms.AppLocal;
-import com.openbravo.pos.forms.DataLogicSales;
 
 /**
  *
@@ -47,6 +43,11 @@ public class JParamsLocation extends javax.swing.JPanel implements ReportEditorC
         initComponents();     
     }
 
+    /**
+     *
+     * @param app
+     */
+    @Override
     public void init(AppView app) {
          
         DataLogicSales dlSales = (DataLogicSales) app.getBean("com.openbravo.pos.forms.DataLogicSales");
@@ -56,6 +57,11 @@ public class JParamsLocation extends javax.swing.JPanel implements ReportEditorC
         m_LocationsModel = new ComboBoxValModel();   
     }
         
+    /**
+     *
+     * @throws BasicException
+     */
+    @Override
     public void activate() throws BasicException {
         List a = m_sentlocations.list();
         addFirst(a);
@@ -64,27 +70,54 @@ public class JParamsLocation extends javax.swing.JPanel implements ReportEditorC
         m_jLocation.setModel(m_LocationsModel); // refresh model   
     }
     
+    /**
+     *
+     * @return
+     */
+    @Override
     public SerializerWrite getSerializerWrite() {
         return new SerializerWriteBasic(new Datas[] {Datas.OBJECT, Datas.STRING});
     }
 
+    /**
+     *
+     * @return
+     */
+    @Override
     public Component getComponent() {
         return this;
     }
 
-    
+    /**
+     *
+     * @param a
+     */
     protected void addFirst(List a) {
         // do nothing
     }
     
+    /**
+     *
+     * @param l
+     */
     public void addActionListener(ActionListener l) {
         m_jLocation.addActionListener(l);
     }
     
+    /**
+     *
+     * @param l
+     */
     public void removeActionListener(ActionListener l) {
         m_jLocation.removeActionListener(l);
     }
     
+    /**
+     *
+     * @return
+     * @throws BasicException
+     */
+    @Override
     public Object createValue() throws BasicException {
         
         return new Object[] {
@@ -103,8 +136,13 @@ public class JParamsLocation extends javax.swing.JPanel implements ReportEditorC
         m_jLocation = new javax.swing.JComboBox();
         jLabel8 = new javax.swing.JLabel();
 
-        setBorder(javax.swing.BorderFactory.createTitledBorder(AppLocal.getIntString("label.bywarehouse"))); // NOI18N
+        setBorder(javax.swing.BorderFactory.createTitledBorder(null, AppLocal.getIntString("label.bywarehouse"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 12))); // NOI18N
+        setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        setPreferredSize(new java.awt.Dimension(370, 60));
 
+        m_jLocation.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+
+        jLabel8.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel8.setText(AppLocal.getIntString("label.warehouse")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -122,9 +160,9 @@ public class JParamsLocation extends javax.swing.JPanel implements ReportEditorC
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel8)
-                    .addComponent(m_jLocation, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(13, Short.MAX_VALUE))
+                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(m_jLocation, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
     

@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (C) 2008-2009 Openbravo, S.L.
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta & previous Openbravo POS works
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -28,21 +28,38 @@ public class Table {
     private String name;
     private Column[] columns;
     
+    /**
+     *
+     * @param name
+     * @param columns
+     */
     public Table(String name, Column... columns) {
         this.name = name;
         this.columns = columns;
     }
     
+    /**
+     *
+     * @return
+     */
     public String getName() {
         return name;
     }
     
+    /**
+     *
+     * @return
+     */
     public Column[] getColumns() {
         return columns;
     }
     
+    /**
+     *
+     * @return
+     */
     public String getListSQL() {
-        StringBuffer sent = new StringBuffer();
+        StringBuilder sent = new StringBuilder();
         sent.append("select ");
 
         for (int i = 0; i < columns.length; i ++) {
@@ -56,12 +73,16 @@ public class Table {
         sent.append(name);
         
         return sent.toString();          
-    }   
-    
+    }
+
+    /**
+     *
+     * @return
+     */
     public String getInsertSQL() {
         
-        StringBuffer sent = new StringBuffer();
-        StringBuffer values = new StringBuffer();
+        StringBuilder sent = new StringBuilder();
+        StringBuilder values = new StringBuilder();
         
         sent.append("insert into ");
         sent.append(name);
@@ -81,12 +102,16 @@ public class Table {
         sent.append(")");
 
         return sent.toString();       
-    }    
-    
+    }
+
+    /**
+     *
+     * @return
+     */
     public String getUpdateSQL() {
         
-        StringBuffer values = new StringBuffer();
-        StringBuffer filter = new StringBuffer();
+        StringBuilder values = new StringBuilder();
+        StringBuilder filter = new StringBuilder();
         
         for (int i = 0; i < columns.length; i ++) {
             if (columns[i].isPK()) {
@@ -107,11 +132,15 @@ public class Table {
         }
         
         return "update " + name + " set " + values + filter;             
-    }   
-    
+    }
+
+    /**
+     *
+     * @return
+     */
     public String getDeleteSQL() {
         
-        StringBuffer filter = new StringBuffer();
+        StringBuilder filter = new StringBuilder();
 
         for (int i = 0; i < columns.length; i ++) {
             if (columns[i].isPK()) {

@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (c) 2009-2011 uniCenta
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -32,14 +32,25 @@ import javax.swing.JLabel;
  */
 public class LabelIcon extends JLabel implements Icon {
     
-    private int iconwidth;
-    private int iconheight;
+    private final int iconwidth;
+    private final int iconheight;
     
+    /**
+     *
+     * @param width
+     * @param height
+     */
     public LabelIcon(int width, int height) {
         iconwidth = width;
         iconheight = height;
     }
 
+    /**
+     *
+     * @param mywidth
+     * @param myheight
+     * @return
+     */
     public BufferedImage getImage(int mywidth, int myheight) {
         
         BufferedImage imgtext = new BufferedImage(mywidth, myheight,  BufferedImage.TYPE_INT_ARGB);
@@ -52,6 +63,7 @@ public class LabelIcon extends JLabel implements Icon {
         return imgtext;         
     }
 
+    @Override
     public void paintIcon(Component c, Graphics g, int x, int y) {
         
         setBounds(0, 0, iconwidth, iconheight);
@@ -60,10 +72,12 @@ public class LabelIcon extends JLabel implements Icon {
         g.translate(-x, -y);
     }
 
+    @Override
     public int getIconWidth() {
         return iconwidth;
     }
 
+    @Override
     public int getIconHeight() {
         return iconheight;
     }

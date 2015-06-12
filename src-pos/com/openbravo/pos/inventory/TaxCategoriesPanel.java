@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (C) 2008-2009 Openbravo, S.L.
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta & previous Openbravo POS works
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -19,18 +19,18 @@
 
 package com.openbravo.pos.inventory;
 
-import com.openbravo.pos.panels.*;
-import javax.swing.ListCellRenderer;
 import com.openbravo.data.gui.ListCellRendererBasic;
 import com.openbravo.data.loader.ComparatorCreator;
-import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.data.loader.TableDefinition;
 import com.openbravo.data.loader.Vectorer;
 import com.openbravo.data.user.EditorRecord;
-import com.openbravo.data.user.SaveProvider;
 import com.openbravo.data.user.ListProvider;
 import com.openbravo.data.user.ListProviderCreator;
+import com.openbravo.data.user.SaveProvider;
+import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.forms.DataLogicSales;
+import com.openbravo.pos.panels.JPanelTable;
+import javax.swing.ListCellRenderer;
 
 /**
  *
@@ -45,39 +45,75 @@ public class TaxCategoriesPanel extends JPanelTable {
     public TaxCategoriesPanel() {
     }
     
+    /**
+     *
+     */
+    @Override
     protected void init() {
         DataLogicSales dlSales = (DataLogicSales) app.getBean("com.openbravo.pos.forms.DataLogicSales");        
         ttaxcategories = dlSales.getTableTaxCategories();
         jeditor = new TaxCustCategoriesEditor(dirty);
     }
     
+    /**
+     *
+     * @return
+     */
+    @Override
     public ListProvider getListProvider() {
         return new ListProviderCreator(ttaxcategories);
     }
     
+    /**
+     *
+     * @return
+     */
+    @Override
     public SaveProvider getSaveProvider() {
         return new SaveProvider(ttaxcategories);      
     }
     
+    /**
+     *
+     * @return
+     */
     @Override
     public Vectorer getVectorer() {
         return ttaxcategories.getVectorerBasic(new int[]{1});
     }
     
+    /**
+     *
+     * @return
+     */
     @Override
     public ComparatorCreator getComparatorCreator() {
         return ttaxcategories.getComparatorCreator(new int[] {1});
     }
     
+    /**
+     *
+     * @return
+     */
     @Override
     public ListCellRenderer getListCellRenderer() {
         return new ListCellRendererBasic(ttaxcategories.getRenderStringBasic(new int[]{1}));
     }
     
+    /**
+     *
+     * @return
+     */
+    @Override
     public EditorRecord getEditor() {
         return jeditor;
     }
         
+    /**
+     *
+     * @return
+     */
+    @Override
     public String getTitle() {
         return AppLocal.getIntString("Menu.TaxCategories");
     }     

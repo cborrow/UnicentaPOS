@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (c) 2009-2011 uniCenta
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta & previous Openbravo POS works
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -22,30 +22,25 @@ package com.openbravo.pos.printer.printer;
 import com.openbravo.data.gui.JMessageDialog;
 import com.openbravo.data.gui.MessageInf;
 import com.openbravo.pos.forms.AppLocal;
-import java.awt.Toolkit;
-import java.awt.image.BufferedImage;
-import javax.swing.JComponent;
 import com.openbravo.pos.printer.DevicePrinter;
 import com.openbravo.pos.printer.ticket.BasicTicket;
 import com.openbravo.pos.printer.ticket.BasicTicketForPrinter;
 import com.openbravo.pos.util.ReportUtils;
 import com.openbravo.pos.util.SelectPrinter;
 import java.awt.Component;
+import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.print.Doc;
-import javax.print.DocFlavor;
-import javax.print.DocPrintJob;
-import javax.print.PrintException;
-import javax.print.PrintService;
-import javax.print.SimpleDoc;
+import javax.print.*;
 import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
 import javax.print.attribute.standard.JobName;
 import javax.print.attribute.standard.Media;
 import javax.print.attribute.standard.MediaSizeName;
 import javax.print.attribute.standard.OrientationRequested;
+import javax.swing.JComponent;
 
 /**
  *Class DevicePrinterPrinter is responsible for printing tickets using system <br>
@@ -59,7 +54,7 @@ import javax.print.attribute.standard.OrientationRequested;
  */
 public class DevicePrinterPrinter implements DevicePrinter {
 
-    private static Logger logger = Logger.getLogger("com.openbravo.pos.printer.printer.DevicePrinterPrinter");
+    private static final Logger logger = Logger.getLogger("com.openbravo.pos.printer.printer.DevicePrinterPrinter");
 
     private Component parent;
     /*name of a printer*/
@@ -89,14 +84,20 @@ public class DevicePrinterPrinter implements DevicePrinter {
     private int imageable_x;
     private int imageable_y;
     private Media media;
-
-    private static final HashMap<String, MediaSizeName> mediasizenamemap = new HashMap<String, MediaSizeName>();
+    
+    // JG 16 May 12 use multicatch
+    private static final HashMap<String, MediaSizeName> mediasizenamemap = new HashMap<>();
 
     /** 
      * Creates a new instance of DevicePrinterPrinter
      * 
+     * @param parent
      * @param printername - name of printer that will be called in the system
-     * @param isReceiptPrinter - string with boolean values if the printer is a receipt
+     * @param imageable_x
+     * @param imageable_y
+     * @param imageable_height
+     * @param imageable_width
+     * @param mediasizename
      */
     public DevicePrinterPrinter(Component parent, String printername, int imageable_x, int imageable_y, int imageable_width, int imageable_height, String mediasizename) {
 
@@ -174,6 +175,22 @@ public class DevicePrinterPrinter implements DevicePrinter {
      * @param type a type of a barcode
      * @param position coordinates of a barcode on a receipt
      * @param code the code of a productmiale
+     */
+
+    /**
+     * Method that is responsible for printing a barcode
+     * @param position coordinates of a barcode on a receipt
+     * @param code the code of a productmiale
+     */
+    @Override
+    public void printLogo(){   
+    }
+
+    /**
+     *
+     * @param type
+     * @param position
+     * @param code
      */
     @Override
     public void printBarCode(String type, String position, String code) {
@@ -268,6 +285,11 @@ public class DevicePrinterPrinter implements DevicePrinter {
     public void openDrawer() {
         // Una simulacion
         Toolkit.getDefaultToolkit().beep();
+    }
+    
+    @Override
+    public void cutReceipt() {
+        
     }
 
     private static MediaSizeName getMedia(String mediasizename) {

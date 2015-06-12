@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (c) 2009-2011 uniCenta
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta & previous Openbravo POS works
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -30,6 +30,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+/**
+ *
+ * @author JG uniCenta
+ */
 public class JClockPanel extends javax.swing.JPanel {
     
     private static Calendar m_calendar = new GregorianCalendar(); // solo de ayuda...
@@ -43,6 +47,10 @@ public class JClockPanel extends javax.swing.JPanel {
         this(true);
     }
     
+    /**
+     *
+     * @param bSeconds
+     */
     public JClockPanel(boolean bSeconds) {
         
         initComponents();
@@ -52,32 +60,60 @@ public class JClockPanel extends javax.swing.JPanel {
         m_lPeriod = 0L;
     }
     
+    /**
+     *
+     * @param bValue
+     */
     public void setSecondsVisible(boolean bValue) {
         m_bSeconds = bValue;
         repaint();
     }
+
+    /**
+     *
+     * @return
+     */
     public boolean isSecondsVisible() {
         return m_bSeconds;
     }
+
+    /**
+     *
+     * @param period
+     */
     public void setPeriod(long period) {
         if (period >= 0L) {
             m_lPeriod = period;
             repaint();
         }
     }
+
+    /**
+     *
+     * @return
+     */
     public long getPeriod() {
         return m_lPeriod;
     }
     
+    /**
+     *
+     * @param dDate
+     */
     public void setTime(Date dDate){
         m_date = dDate;
         repaint();
     }
     
+    /**
+     *
+     * @return
+     */
     public Date getTime() {
         return m_date;
     }
     
+    @Override
     public void paintComponent(Graphics g) {
         
         super.paintComponent(g);
@@ -203,11 +239,11 @@ public class JClockPanel extends javax.swing.JPanel {
         g2.setPaint(oldPainter);
     }   
     
-    // <editor-fold defaultstate="collapsed" desc=" Generated Code ">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-    }
-    // </editor-fold>//GEN-END:initComponents
+        setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+    }// </editor-fold>//GEN-END:initComponents
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (C) 2008-2009 Openbravo, S.L.
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta & previous Openbravo POS works
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -47,13 +47,16 @@ public class AttributeUseEditor extends javax.swing.JPanel implements EditorReco
 
     private Object insertid;
 
-    /** Creates new form AttributeSetEditor */
+    /** Creates new form AttributeSetEditor
+     * @param app
+     * @param dirty */
     public AttributeUseEditor(AppView app, DirtyManager dirty) {
 
         attributesent = new StaticSentence(app.getSession()
             , "SELECT ID, NAME FROM ATTRIBUTE ORDER BY NAME"
             , null
-            , new SerializerRead() { public Object readValues(DataRead dr) throws BasicException {
+            , new SerializerRead() {@Override
+ public Object readValues(DataRead dr) throws BasicException {
                 return new AttributeInfo(dr.getString(1), dr.getString(2));
             }}
         );
@@ -65,20 +68,36 @@ public class AttributeUseEditor extends javax.swing.JPanel implements EditorReco
         jAttribute.addActionListener(dirty);
     }
 
+    /**
+     *
+     * @param insertid
+     */
     public void setInsertId(String insertid) {
 
         this.insertid = insertid;
     }
 
+    /**
+     *
+     * @throws BasicException
+     */
     public void activate() throws BasicException {
 
         attributemodel = new ComboBoxValModel(attributesent.list());
         jAttribute.setModel(attributemodel);
     }
 
+    /**
+     *
+     */
+    @Override
     public void refresh() {
     }
 
+    /**
+     *
+     */
+    @Override
     public void writeValueEOF() {
 
         id = null;
@@ -90,6 +109,10 @@ public class AttributeUseEditor extends javax.swing.JPanel implements EditorReco
         jLineno.setEnabled(false);
     }
 
+    /**
+     *
+     */
+    @Override
     public void writeValueInsert() {
 
         id = UUID.randomUUID().toString();
@@ -101,6 +124,11 @@ public class AttributeUseEditor extends javax.swing.JPanel implements EditorReco
         jLineno.setEnabled(true);
     }
 
+    /**
+     *
+     * @param value
+     */
+    @Override
     public void writeValueEdit(Object value) {
 
         Object[] obj = (Object[]) value;
@@ -114,6 +142,11 @@ public class AttributeUseEditor extends javax.swing.JPanel implements EditorReco
         jLineno.setEnabled(true);
     }
 
+    /**
+     *
+     * @param value
+     */
+    @Override
     public void writeValueDelete(Object value) {
 
         Object[] obj = (Object[]) value;
@@ -127,10 +160,21 @@ public class AttributeUseEditor extends javax.swing.JPanel implements EditorReco
         jLineno.setEnabled(false);
     }
 
+    /**
+     *
+     * @return
+     */
+    @Override
     public Component getComponent() {
         return this;
     }
 
+    /**
+     *
+     * @return
+     * @throws BasicException
+     */
+    @Override
     public Object createValue() throws BasicException {
         Object[] value = new Object[5];
 
@@ -157,9 +201,17 @@ public class AttributeUseEditor extends javax.swing.JPanel implements EditorReco
         jLabel4 = new javax.swing.JLabel();
         jAttribute = new javax.swing.JComboBox();
 
+        setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+
+        jLabel3.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel3.setText(AppLocal.getIntString("label.order")); // NOI18N
 
+        jLineno.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+
+        jLabel4.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel4.setText(AppLocal.getIntString("label.attribute")); // NOI18N
+
+        jAttribute.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -176,20 +228,20 @@ public class AttributeUseEditor extends javax.swing.JPanel implements EditorReco
                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jAttribute, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(249, Short.MAX_VALUE))
+                .addContainerGap(59, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(jLineno, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLineno, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(jAttribute, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(273, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jAttribute, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 

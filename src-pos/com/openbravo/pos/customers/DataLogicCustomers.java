@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (c) 2009-2011 uniCenta
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta & previous Openbravo POS works
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -20,89 +20,204 @@
 package com.openbravo.pos.customers;
 
 import com.openbravo.basic.BasicException;
-import com.openbravo.data.loader.DataParams;
-import com.openbravo.data.loader.DataRead;
-import com.openbravo.data.loader.Datas;
-import com.openbravo.data.loader.PreparedSentence;
-import com.openbravo.data.loader.QBFBuilder;
-import com.openbravo.data.loader.SentenceExec;
-import com.openbravo.data.loader.SentenceExecTransaction;
-import com.openbravo.data.loader.SentenceList;
-import com.openbravo.data.loader.SerializerRead;
-import com.openbravo.data.loader.SerializerReadBasic;
-import com.openbravo.data.loader.SerializerWriteBasic;
-import com.openbravo.data.loader.SerializerWriteBasicExt;
-import com.openbravo.data.loader.SerializerWriteParams;
-import com.openbravo.data.loader.Session;
-import com.openbravo.data.loader.StaticSentence;
-import com.openbravo.data.loader.TableDefinition;
+import com.openbravo.data.loader.*;
 import com.openbravo.format.Formats;
 import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.forms.BeanFactoryDataSingle;
 
 /**
- *
+ * @author JG uniCenta
  * @author adrianromero
  */
 public class DataLogicCustomers extends BeanFactoryDataSingle {
     
+    /**
+     * Main Method for customer object
+     */
     protected Session s;
     private TableDefinition tcustomers;
-    private static Datas[] customerdatas = new Datas[] {Datas.STRING, Datas.TIMESTAMP, Datas.TIMESTAMP, Datas.STRING, Datas.STRING, Datas.STRING, Datas.STRING, Datas.INT, Datas.BOOLEAN, Datas.STRING};
+    private static final Datas[] customerdatas = new Datas[] {
+        Datas.STRING, 
+        Datas.TIMESTAMP, 
+        Datas.TIMESTAMP, 
+        Datas.STRING, 
+        Datas.STRING, 
+        Datas.STRING, 
+        Datas.STRING, 
+        Datas.INT, 
+        Datas.BOOLEAN, 
+        Datas.STRING};
     
+    /**
+     *
+     * @param s
+     */
+    @Override
     public void init(Session s){
-        
+// JG 03 Oct - Added Customer Image        
         this.s = s;
         tcustomers = new TableDefinition(s
             , "CUSTOMERS"
-            , new String[] { "ID", "TAXID", "SEARCHKEY", "NAME", "NOTES", "VISIBLE", "CARD", "MAXDEBT", "CURDATE", "CURDEBT"
-                           , "FIRSTNAME", "LASTNAME", "EMAIL", "PHONE", "PHONE2", "FAX"
-                           , "ADDRESS", "ADDRESS2", "POSTAL", "CITY", "REGION", "COUNTRY"
-                           , "TAXCATEGORY" }
-            , new String[] { "ID", AppLocal.getIntString("label.taxid"), AppLocal.getIntString("label.searchkey"), AppLocal.getIntString("label.name"), AppLocal.getIntString("label.notes"), "VISIBLE", "CARD", AppLocal.getIntString("label.maxdebt"), AppLocal.getIntString("label.curdate"), AppLocal.getIntString("label.curdebt")
-                           , AppLocal.getIntString("label.firstname"), AppLocal.getIntString("label.lastname"), AppLocal.getIntString("label.email"), AppLocal.getIntString("label.phone"), AppLocal.getIntString("label.phone2"), AppLocal.getIntString("label.fax")
-                           , AppLocal.getIntString("label.address"), AppLocal.getIntString("label.address2"), AppLocal.getIntString("label.postal"), AppLocal.getIntString("label.city"), AppLocal.getIntString("label.region"), AppLocal.getIntString("label.country")
-                           , "TAXCATEGORY"}
-            , new Datas[] { Datas.STRING, Datas.STRING, Datas.STRING, Datas.STRING, Datas.STRING, Datas.BOOLEAN, Datas.STRING, Datas.DOUBLE, Datas.TIMESTAMP, Datas.DOUBLE
-                          , Datas.STRING, Datas.STRING, Datas.STRING, Datas.STRING, Datas.STRING, Datas.STRING
-                          , Datas.STRING, Datas.STRING, Datas.STRING, Datas.STRING, Datas.STRING, Datas.STRING
-                          , Datas.STRING}
-            , new Formats[] { Formats.STRING, Formats.STRING, Formats.STRING, Formats.STRING, Formats.STRING, Formats.BOOLEAN, Formats.STRING, Formats.CURRENCY, Formats.TIMESTAMP, Formats.CURRENCY
-                            , Formats.STRING, Formats.STRING, Formats.STRING, Formats.STRING, Formats.STRING, Formats.STRING
-                            , Formats.STRING, Formats.STRING, Formats.STRING, Formats.STRING, Formats.STRING, Formats.STRING
-                            , Formats.STRING}
+            , new String[] { 
+                "ID", 
+                "TAXID", 
+                "SEARCHKEY", 
+                "NAME", 
+                "NOTES", 
+                "VISIBLE", 
+                "CARD", 
+                "MAXDEBT", 
+                "CURDATE", 
+                "CURDEBT",
+                "FIRSTNAME",
+                "LASTNAME",
+                "EMAIL",
+                "PHONE",
+                "PHONE2",
+                "FAX",
+                "ADDRESS",
+                "ADDRESS2",
+                "POSTAL",
+                "CITY",
+                "REGION",
+                "COUNTRY",
+                "TAXCATEGORY",
+                "IMAGE" }
+            , new String[] { 
+                "ID", 
+                AppLocal.getIntString("label.taxid"),
+                AppLocal.getIntString("label.searchkey"),
+                AppLocal.getIntString("label.name"),
+                AppLocal.getIntString("label.notes"),
+                "VISIBLE",
+                "CARD",
+                AppLocal.getIntString("label.maxdebt"),
+                AppLocal.getIntString("label.curdate"),
+                AppLocal.getIntString("label.curdebt"),
+                AppLocal.getIntString("label.firstname"),
+                AppLocal.getIntString("label.lastname"),
+                AppLocal.getIntString("label.email"),
+                AppLocal.getIntString("label.phone"),
+                AppLocal.getIntString("label.phone2"),
+                AppLocal.getIntString("label.fax"),
+                AppLocal.getIntString("label.address"),
+                AppLocal.getIntString("label.address2"),
+                AppLocal.getIntString("label.postal"),
+                AppLocal.getIntString("label.city"),
+                AppLocal.getIntString("label.region"),
+                AppLocal.getIntString("label.country"),
+                "TAXCATEGORY",
+                "IMAGE" }
+            , new Datas[] { 
+                Datas.STRING, 
+                Datas.STRING, 
+                Datas.STRING, 
+                Datas.STRING, 
+                Datas.STRING, 
+                Datas.BOOLEAN, 
+                Datas.STRING,
+                Datas.DOUBLE,
+                Datas.TIMESTAMP, 
+                Datas.DOUBLE,
+                Datas.STRING,
+                Datas.STRING,
+                Datas.STRING,
+                Datas.STRING,
+                Datas.STRING,
+                Datas.STRING,
+                Datas.STRING,
+                Datas.STRING,
+                Datas.STRING,
+                Datas.STRING,
+                Datas.STRING,
+                Datas.STRING,
+                Datas.STRING,
+                Datas.IMAGE }
+            , new Formats[] {
+                Formats.STRING, 
+                Formats.STRING, 
+                Formats.STRING, 
+                Formats.STRING, 
+                Formats.STRING,
+                Formats.BOOLEAN,
+                Formats.STRING,
+                Formats.CURRENCY,
+                Formats.TIMESTAMP,
+                Formats.CURRENCY,
+                Formats.STRING,
+                Formats.STRING,
+                Formats.STRING,
+                Formats.STRING,
+                Formats.STRING,
+                Formats.STRING,
+                Formats.STRING,
+                Formats.STRING,
+                Formats.STRING,
+                Formats.STRING,
+                Formats.STRING,
+                Formats.STRING,
+                Formats.STRING,
+                Formats.NULL }
             , new int[] {0}
-        );   
-        
+        );
     }
     
-    // CustomerList list
-    public SentenceList getCustomerList() {
+// JG 20 Sept 12 extended for Postal - CustomerList list
+// JG 2 Sept 13 extended for Phone + Email - CustomerList list
+
+    /**
+     *
+     * @return customer data
+    */
+    //JG July 2014 - Amend to PHONE from PHONE2
+        public SentenceList getCustomerList() {
         return new StaticSentence(s
-            , new QBFBuilder("SELECT ID, TAXID, SEARCHKEY, NAME FROM CUSTOMERS WHERE VISIBLE = " + s.DB.TRUE() + " AND ?(QBF_FILTER) ORDER BY NAME", new String[] {"TAXID", "SEARCHKEY", "NAME"})
-            , new SerializerWriteBasic(new Datas[] {Datas.OBJECT, Datas.STRING, Datas.OBJECT, Datas.STRING, Datas.OBJECT, Datas.STRING})
+            , new QBFBuilder("SELECT ID, TAXID, SEARCHKEY, NAME, POSTAL, EMAIL, PHONE FROM CUSTOMERS WHERE VISIBLE = " + s.DB.TRUE() + " AND ?(QBF_FILTER) ORDER BY NAME", new String[] {"TAXID", "SEARCHKEY", "NAME", "POSTAL", "PHONE", "EMAIL"})
+            , new SerializerWriteBasic(new Datas[] {
+                Datas.OBJECT, Datas.STRING, 
+                Datas.OBJECT, Datas.STRING, 
+                Datas.OBJECT, Datas.STRING, 
+                Datas.OBJECT, Datas.STRING, 
+                Datas.OBJECT, Datas.STRING,
+                Datas.OBJECT, Datas.STRING})
             , new SerializerRead() {
+            @Override
                     public Object readValues(DataRead dr) throws BasicException {
                         CustomerInfo c = new CustomerInfo(dr.getString(1));
                         c.setTaxid(dr.getString(2));
                         c.setSearchkey(dr.getString(3));
                         c.setName(dr.getString(4));
+                        c.setPostal(dr.getString(5));
+                        c.setPhone(dr.getString(6));
+                        c.setEmail(dr.getString(7));
+
                         return c;
                     }                
-                });
+            });
     }
        
+    /**
+     *
+     * @param customer
+     * @return
+     * @throws BasicException
+     */
     public int updateCustomerExt(final CustomerInfoExt customer) throws BasicException {
      
         return new PreparedSentence(s
                 , "UPDATE CUSTOMERS SET NOTES = ? WHERE ID = ?"
                 , SerializerWriteParams.INSTANCE      
-                ).exec(new DataParams() { public void writeValues() throws BasicException {
+                ).exec(new DataParams() {@Override
+        public void writeValues() throws BasicException {
                         setString(1, customer.getNotes());
                         setString(2, customer.getId());
                 }});        
     }
     
+    /**
+     *
+     * @return customer's existing reservation (restaurant mode)
+     */
     public final SentenceList getReservationsList() {
         return new PreparedSentence(s
             , "SELECT R.ID, R.CREATED, R.DATENEW, C.CUSTOMER, CUSTOMERS.TAXID, CUSTOMERS.SEARCHKEY, COALESCE(CUSTOMERS.NAME, R.TITLE),  R.CHAIRS, R.ISDONE, R.DESCRIPTION " +
@@ -112,8 +227,13 @@ public class DataLogicCustomers extends BeanFactoryDataSingle {
             , new SerializerReadBasic(customerdatas));             
     }
     
+    /**
+     *
+     * @return create/update customer reservation  (restaurant mode)
+     */
     public final SentenceExec getReservationsUpdate() {
         return new SentenceExecTransaction(s) {
+            @Override
             public int execInTransaction(Object params) throws BasicException {  
     
                 new PreparedSentence(s
@@ -131,8 +251,13 @@ public class DataLogicCustomers extends BeanFactoryDataSingle {
         };
     }
     
+    /**
+     *
+     * @return delete customer reservation (restaurant mode)
+     */
     public final SentenceExec getReservationsDelete() {
         return new SentenceExecTransaction(s) {
+            @Override
             public int execInTransaction(Object params) throws BasicException {  
     
                 new PreparedSentence(s
@@ -145,8 +270,13 @@ public class DataLogicCustomers extends BeanFactoryDataSingle {
         };
     }
     
+    /**
+     *
+     * @return insert a new customer reservation (restaurant mode)
+     */
     public final SentenceExec getReservationsInsert() {
         return new SentenceExecTransaction(s) {
+            @Override
             public int execInTransaction(Object params) throws BasicException {  
     
                 int i = new PreparedSentence(s
@@ -163,6 +293,10 @@ public class DataLogicCustomers extends BeanFactoryDataSingle {
         };
     }
     
+    /**
+     *
+     * @return assign a table to a customer reservation (restaurant mode)
+     */
     public final TableDefinition getTableCustomers() {
         return tcustomers;
     }  

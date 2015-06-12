@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (c) 2009-2011 uniCenta
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -19,18 +19,18 @@
 
 package com.openbravo.pos.admin;
 
-import java.awt.Component;
-import javax.swing.*;
-import com.openbravo.pos.forms.AppLocal;
-import com.openbravo.pos.util.Hashcypher;
-import java.awt.image.BufferedImage;
-import java.util.UUID;
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.gui.ComboBoxValModel;
 import com.openbravo.data.loader.SentenceList;
 import com.openbravo.data.user.*;
 import com.openbravo.format.Formats;
+import com.openbravo.pos.forms.AppLocal;
+import com.openbravo.pos.util.Hashcypher;
 import com.openbravo.pos.util.StringUtils;
+import java.awt.Component;
+import java.awt.image.BufferedImage;
+import java.util.UUID;
+import javax.swing.*;
 
 /**
  *
@@ -41,12 +41,14 @@ public class PeopleView extends JPanel implements EditorRecord {
     private Object m_oId;
     private String m_sPassword;
     
-    private DirtyManager m_Dirty;
+    private final DirtyManager m_Dirty;
     
-    private SentenceList m_sentrole;
+    private final SentenceList m_sentrole;
     private ComboBoxValModel m_RoleModel;  
     
-    /** Creates new form PeopleEditor */
+    /** Creates new form PeopleEditor
+     * @param dlAdmin
+     * @param dirty */
     public PeopleView(DataLogicAdmin dlAdmin, DirtyManager dirty) {
         initComponents();
                 
@@ -64,6 +66,10 @@ public class PeopleView extends JPanel implements EditorRecord {
         writeValueEOF();
     }
 
+    /**
+     *
+     */
+    @Override
     public void writeValueEOF() {
         m_oId = null;
         m_jName.setText(null);
@@ -82,6 +88,10 @@ public class PeopleView extends JPanel implements EditorRecord {
         jButton3.setEnabled(false);
     }
     
+    /**
+     *
+     */
+    @Override
     public void writeValueInsert() {
         m_oId = null;
         m_jName.setText(null);
@@ -100,6 +110,11 @@ public class PeopleView extends JPanel implements EditorRecord {
         jButton3.setEnabled(true);
     }
     
+    /**
+     *
+     * @param value
+     */
+    @Override
     public void writeValueDelete(Object value) {
         Object[] people = (Object[]) value;
         m_oId = people[0];
@@ -109,6 +124,7 @@ public class PeopleView extends JPanel implements EditorRecord {
         m_jVisible.setSelected(((Boolean) people[4]).booleanValue());
         jcard.setText(Formats.STRING.formatValue(people[5]));
         m_jImage.setImage((BufferedImage) people[6]);
+        
         m_jName.setEnabled(false);
         m_jRole.setEnabled(false);
         m_jVisible.setEnabled(false);
@@ -117,8 +133,13 @@ public class PeopleView extends JPanel implements EditorRecord {
         jButton1.setEnabled(false);
         jButton2.setEnabled(false);
         jButton3.setEnabled(false);
-    }    
-    
+    }
+
+    /**
+     *
+     * @param value
+     */
+    @Override
     public void writeValueEdit(Object value) {
         Object[] people = (Object[]) value;
         m_oId = people[0];
@@ -128,6 +149,7 @@ public class PeopleView extends JPanel implements EditorRecord {
         m_jVisible.setSelected(((Boolean) people[4]).booleanValue());
         jcard.setText(Formats.STRING.formatValue(people[5]));
         m_jImage.setImage((BufferedImage) people[6]);
+        
         m_jName.setEnabled(true);
         m_jRole.setEnabled(true);
         m_jVisible.setEnabled(true);
@@ -138,6 +160,12 @@ public class PeopleView extends JPanel implements EditorRecord {
         jButton3.setEnabled(true);
     }
     
+    /**
+     *
+     * @return
+     * @throws BasicException
+     */
+    @Override
     public Object createValue() throws BasicException {
         Object[] people = new Object[7];
         people[0] = m_oId == null ? UUID.randomUUID().toString() : m_oId;
@@ -148,18 +176,31 @@ public class PeopleView extends JPanel implements EditorRecord {
         people[5] = Formats.STRING.parseValue(jcard.getText());
         people[6] = m_jImage.getImage();
         return people;
-    }    
-    
+    }
+
+    /**
+     *
+     * @return
+     */
+    @Override
     public Component getComponent() {
         return this;
-    }    
-    
+    }
+
+    /**
+     *
+     * @throws BasicException
+     */
     public void activate() throws BasicException {
         
         m_RoleModel = new ComboBoxValModel(m_sentrole.list());
         m_jRole.setModel(m_RoleModel);
     }
     
+    /**
+     *
+     */
+    @Override
     public void refresh() {
     }
      
@@ -185,6 +226,9 @@ public class PeopleView extends JPanel implements EditorRecord {
         jButton2 = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
 
+        setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        setPreferredSize(new java.awt.Dimension(531, 400));
+
         jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/fileclose.png"))); // NOI18N
         jButton3.setToolTipText("Clear Key");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -193,24 +237,37 @@ public class PeopleView extends JPanel implements EditorRecord {
             }
         });
 
+        jLabel1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel1.setText(AppLocal.getIntString("label.peoplename")); // NOI18N
 
+        m_jName.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+
+        m_jVisible.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+
+        jLabel3.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel3.setText(AppLocal.getIntString("label.peoplevisible")); // NOI18N
 
+        jLabel4.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel4.setText(AppLocal.getIntString("label.peopleimage")); // NOI18N
 
-        m_jImage.setMaxDimensions(new java.awt.Dimension(32, 32));
+        m_jImage.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
 
+        jButton1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jButton1.setText(AppLocal.getIntString("button.peoplepassword")); // NOI18N
+        jButton1.setPreferredSize(new java.awt.Dimension(79, 32));
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
 
+        m_jRole.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+
+        jLabel2.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel2.setText(AppLocal.getIntString("label.role")); // NOI18N
 
         jcard.setEditable(false);
+        jcard.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
 
         jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/encrypted.png"))); // NOI18N
         jButton2.setToolTipText("Create Key");
@@ -220,6 +277,7 @@ public class PeopleView extends JPanel implements EditorRecord {
             }
         });
 
+        jLabel5.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel5.setText(AppLocal.getIntString("label.card")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -238,7 +296,7 @@ public class PeopleView extends JPanel implements EditorRecord {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(m_jName, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1))
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -262,9 +320,9 @@ public class PeopleView extends JPanel implements EditorRecord {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(m_jName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(m_jName, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(13, 13, 13)
@@ -274,21 +332,21 @@ public class PeopleView extends JPanel implements EditorRecord {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel5)
-                            .addComponent(jcard, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jcard, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(m_jRole, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(m_jRole, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3)
-                    .addComponent(m_jVisible))
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(m_jVisible, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(15, 15, 15)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(m_jImage, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4))
-                .addGap(199, 199, 199))
+                .addContainerGap(27, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -306,7 +364,8 @@ public class PeopleView extends JPanel implements EditorRecord {
         
         
         if (JOptionPane.showConfirmDialog(this, AppLocal.getIntString("message.cardnew"), AppLocal.getIntString("title.editor"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {  
-            jcard.setText("c" + StringUtils.getCardNumber());
+// JG 8 Jan 14 - Change "c" case to upper "C"        jcard.setText("c" + StringUtils.getCardNumber());
+            jcard.setText("C" + StringUtils.getCardNumber());
             m_Dirty.setDirty(true);
         }
         

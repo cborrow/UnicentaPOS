@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (c) 2009-2011 uniCenta
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta & previous Openbravo POS works
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -28,28 +28,61 @@ import javax.swing.JViewport;
 import javax.swing.Scrollable;
 import javax.swing.SwingConstants;
 
+/**
+ *
+ * @author JG uniCenta
+ */
 public class JFlowPanel extends JPanel implements Scrollable {
     
     private int hgap = 5;
     private int vgap  = 5;
     
+    /**
+     *
+     */
     public JFlowPanel() {
         this(5, 5);
     }
+
+    /**
+     *
+     * @param hgap
+     * @param vgap
+     */
     public JFlowPanel(int hgap, int vgap) {
         this.hgap = hgap;
         this.vgap = vgap;
     }
     
+    /**
+     *
+     * @param iValue
+     */
     public void setHorizontalGap(int iValue) {
         hgap = iValue;
     }
+
+    /**
+     *
+     * @return
+     */
     public int getHorizontalGap() {
         return hgap;
     }
+
+    /**
+     *
+     * @param iValue
+     */
     public void setVerticalGap(int iValue) {
         vgap = iValue;
     }
+
+    /**
+     *
+     * @param iValue
+     * @return
+     */
     public int getVerticalGap(int iValue) {
         return vgap;
     }  
@@ -80,7 +113,9 @@ public class JFlowPanel extends JPanel implements Scrollable {
                     if (x == 0 || (x + hgap + d.width + hgap) <= maxWidth) {
                         // continuamos con esta linea
                         x += hgap;
-                        if (bDoChilds) m.setBounds(getPosition(x, maxWidth - d.width), dim.height, d.width, d.height);
+                        if (bDoChilds) {
+                            m.setBounds(getPosition(x, maxWidth - d.width), dim.height, d.width, d.height);
+                        }
                         x += d.width;
                         if (d.height > maxRowHeight) {
                             maxRowHeight = d.height;
@@ -88,7 +123,9 @@ public class JFlowPanel extends JPanel implements Scrollable {
                     } else {
                         // nueva linea
                         dim.height += maxRowHeight + vgap;
-                        if (bDoChilds) m.setBounds(getPosition(hgap, maxWidth - d.width), dim.height, d.width, d.height);
+                        if (bDoChilds) {
+                            m.setBounds(getPosition(hgap, maxWidth - d.width), dim.height, d.width, d.height);
+                        }
                         if (x > maxRowWidth) {
                             maxRowWidth = x;
                         }

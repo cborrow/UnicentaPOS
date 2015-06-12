@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (c) 2009-2011 uniCenta
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta & previous Openbravo POS works
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -28,24 +28,50 @@ import java.awt.event.ActionListener;
  */
 public class DeviceDisplayBase {
     
+    /**
+     *
+     */
     public static final int ANIMATION_NULL = 0;
+
+    /**
+     *
+     */
     public static final int ANIMATION_FLYER = 1;
+
+    /**
+     *
+     */
     public static final int ANIMATION_SCROLL = 2;
+
+    /**
+     *
+     */
     public static final int ANIMATION_BLINK = 3;
+
+    /**
+     *
+     */
     public static final int ANIMATION_CURTAIN = 4;
     
-    private DeviceDisplayImpl impl;    
+    private final DeviceDisplayImpl impl;    
     private DisplayAnimator anim;     
-    private javax.swing.Timer m_tTimeTimer;    
+    private final javax.swing.Timer m_tTimeTimer;    
     private int counter = 0;
     
-    /** Creates a new instance of DeviceDisplayBase */
+    /** Creates a new instance of DeviceDisplayBase
+     * @param impl */
     public DeviceDisplayBase(DeviceDisplayImpl impl) {
         this.impl = impl; 
         anim = new NullAnimator("", "");
         m_tTimeTimer = new javax.swing.Timer(50, new PrintTimeAction());
     }
     
+    /**
+     *
+     * @param animation
+     * @param sLine1
+     * @param sLine2
+     */
     public void writeVisor(int animation, String sLine1, String sLine2) {
         
         m_tTimeTimer.stop();
@@ -77,23 +103,40 @@ public class DeviceDisplayBase {
         }
     }
          
+    /**
+     *
+     * @param sLine1
+     * @param sLine2
+     */
     public void writeVisor(String sLine1, String sLine2) {
         writeVisor(ANIMATION_NULL, sLine1, sLine2);
     }
     
+    /**
+     *
+     */
     public void clearVisor() {
         writeVisor(ANIMATION_NULL, "", "");
     }
     
+    /**
+     *
+     * @return
+     */
     public String getLine1() {
         return anim.getLine1();
     }
     
+    /**
+     *
+     * @return
+     */
     public String getLine2() {
         return anim.getLine2();
     }
     
     private class PrintTimeAction implements ActionListener {
+        @Override
         public void actionPerformed(ActionEvent evt) {
             counter ++;
             anim.setTiming(counter);

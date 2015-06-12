@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (c) 2009-2011 uniCenta
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -27,6 +27,10 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Random;
 
+/**
+ *
+ * @author JG uniCenta
+ */
 public class StringUtils {
     
     private static final char [] hexchars = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
@@ -38,17 +42,26 @@ public class StringUtils {
     private StringUtils() {
     }
     
+    /**
+     *
+     * @return
+     */
     public static String getCardNumber() {
     return cardformat.format(Math.abs(System.currentTimeMillis()) % 1000000L)
          + cardformat.format(Math.abs(cardrandom.nextLong()) % 1000000L);
     }
     
+    /**
+     *
+     * @param sValue
+     * @return
+     */
     public static String encodeXML(String sValue) {
         
         if (sValue == null) {
             return null;
         } else {
-            StringBuffer buffer = new StringBuffer();      
+            StringBuilder buffer = new StringBuilder();      
             for (int i = 0; i < sValue.length(); i++) {
                 char charToCompare = sValue.charAt(i);
                 if (charToCompare == '&') {
@@ -67,11 +80,16 @@ public class StringUtils {
             }
             return buffer.toString();
         }
-    }  
-    
+    }
+
+    /**
+     *
+     * @param binput
+     * @return
+     */
     public static String byte2hex(byte[] binput) {
         
-        StringBuffer sb = new StringBuffer(binput.length * 2);
+        StringBuilder sb = new StringBuilder(binput.length * 2);
         for (int i = 0; i < binput.length; i++) {
             int high = ((binput[i] & 0xF0) >> 4);
             int low = (binput[i] & 0x0F);
@@ -81,6 +99,11 @@ public class StringUtils {
         return sb.toString();
     }    
 
+    /**
+     *
+     * @param sinput
+     * @return
+     */
     public static byte [] hex2byte(String sinput) {
         int length = sinput.length();
 
@@ -98,8 +121,14 @@ public class StringUtils {
         }
 
         return out;
-    }  
-    
+    }
+
+    /**
+     *
+     * @param resource
+     * @return
+     * @throws IOException
+     */
     public static String readResource(String resource) throws IOException {
         
         InputStream in = StringUtils.class.getResourceAsStream(resource);
@@ -117,6 +146,11 @@ public class StringUtils {
         return new String(data, "UTF-8");
     }
         
+    /**
+     *
+     * @param sCardNumber
+     * @return
+     */
     public static boolean isNumber(String sCardNumber){
         
         if ( (sCardNumber==null) || (sCardNumber.equals("")) ){

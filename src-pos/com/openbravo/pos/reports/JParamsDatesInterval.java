@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (c) 2009-2011 uniCenta
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta & previous Openbravo POS works
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -19,18 +19,22 @@
 
 package com.openbravo.pos.reports;
 
+import com.openbravo.basic.BasicException;
+import com.openbravo.beans.JCalendarDialog;
+import com.openbravo.data.loader.Datas;
+import com.openbravo.data.loader.QBFCompareEnum;
+import com.openbravo.data.loader.SerializerWrite;
+import com.openbravo.data.loader.SerializerWriteBasic;
+import com.openbravo.format.Formats;
+import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.forms.AppView;
 import java.awt.Component;
 import java.util.Date;
-import com.openbravo.beans.JCalendarDialog;
-import com.openbravo.pos.forms.AppLocal;
-import com.openbravo.data.loader.QBFCompareEnum;
-import com.openbravo.format.Formats;
-import com.openbravo.basic.BasicException;
-import com.openbravo.data.loader.Datas;
-import com.openbravo.data.loader.SerializerWrite;
-import com.openbravo.data.loader.SerializerWriteBasic;
 
+/**
+ *
+ * @author JG uniCenta
+ */
 public class JParamsDatesInterval extends javax.swing.JPanel implements ReportEditorCreator {
 
     /** Creates new form JParamsClosedPos */
@@ -38,31 +42,66 @@ public class JParamsDatesInterval extends javax.swing.JPanel implements ReportEd
         initComponents();
     }
     
+    /**
+     *
+     * @param d
+     */
     public void setStartDate(Date d) {
         jTxtStartDate.setText(Formats.TIMESTAMP.formatValue(d));
     }
     
+    /**
+     *
+     * @param d
+     */
     public void setEndDate(Date d) {
         jTxtEndDate.setText(Formats.TIMESTAMP.formatValue(d));
     }
 
+    /**
+     *
+     * @param app
+     */
+    @Override
     public void init(AppView app) {
     }
 
+    /**
+     *
+     * @throws BasicException
+     */
+    @Override
     public void activate() throws BasicException {
     }
     
+    /**
+     *
+     * @return
+     */
+    @Override
     public SerializerWrite getSerializerWrite() {
         return new SerializerWriteBasic(new Datas[] {Datas.OBJECT, Datas.TIMESTAMP, Datas.OBJECT, Datas.TIMESTAMP});
     }
 
+    /**
+     *
+     * @return
+     */
+    @Override
     public Component getComponent() {
         return this;
     }
     
+    /**
+     *
+     * @return
+     * @throws BasicException
+     */
+    @Override
     public Object createValue() throws BasicException {
         Object startdate = Formats.TIMESTAMP.parseValue(jTxtStartDate.getText());
-        Object enddate = Formats.TIMESTAMP.parseValue(jTxtEndDate.getText());   
+        Object enddate = Formats.TIMESTAMP.parseValue(jTxtEndDate.getText());  
+
         return new Object[] {
             startdate == null ? QBFCompareEnum.COMP_NONE : QBFCompareEnum.COMP_GREATEROREQUALS,
             startdate,
@@ -86,21 +125,21 @@ public class JParamsDatesInterval extends javax.swing.JPanel implements ReportEd
         btnDateStart = new javax.swing.JButton();
         btnDateEnd = new javax.swing.JButton();
 
-        setBorder(javax.swing.BorderFactory.createTitledBorder(AppLocal.getIntString("label.bydates"))); // NOI18N
-        setPreferredSize(new java.awt.Dimension(0, 100));
-        setLayout(null);
+        setBorder(javax.swing.BorderFactory.createTitledBorder(null, AppLocal.getIntString("label.bydates"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 12))); // NOI18N
+        setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        setPreferredSize(new java.awt.Dimension(0, 60));
 
+        jLabel1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel1.setText(AppLocal.getIntString("Label.StartDate")); // NOI18N
-        add(jLabel1);
-        jLabel1.setBounds(20, 20, 80, 20);
-        add(jTxtStartDate);
-        jTxtStartDate.setBounds(100, 20, 120, 20);
 
+        jTxtStartDate.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        jTxtStartDate.setPreferredSize(new java.awt.Dimension(150, 25));
+
+        jLabel2.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel2.setText(AppLocal.getIntString("Label.EndDate")); // NOI18N
-        add(jLabel2);
-        jLabel2.setBounds(290, 20, 80, 20);
-        add(jTxtEndDate);
-        jTxtEndDate.setBounds(370, 20, 120, 20);
+
+        jTxtEndDate.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        jTxtEndDate.setPreferredSize(new java.awt.Dimension(150, 25));
 
         btnDateStart.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/date.png"))); // NOI18N
         btnDateStart.setToolTipText("Open Calendar");
@@ -112,8 +151,6 @@ public class JParamsDatesInterval extends javax.swing.JPanel implements ReportEd
                 btnDateStartActionPerformed(evt);
             }
         });
-        add(btnDateStart);
-        btnDateStart.setBounds(230, 15, 40, 33);
 
         btnDateEnd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/date.png"))); // NOI18N
         btnDateEnd.setToolTipText("Open Calendar");
@@ -125,8 +162,37 @@ public class JParamsDatesInterval extends javax.swing.JPanel implements ReportEd
                 btnDateEndActionPerformed(evt);
             }
         });
-        add(btnDateEnd);
-        btnDateEnd.setBounds(500, 15, 40, 33);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(12, 12, 12)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(jTxtStartDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(10, 10, 10)
+                .addComponent(btnDateStart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(10, 10, 10)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(jTxtEndDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(10, 10, 10)
+                .addComponent(btnDateEnd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(4, 4, 4)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTxtStartDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnDateStart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTxtEndDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnDateEnd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+        );
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnDateStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDateStartActionPerformed

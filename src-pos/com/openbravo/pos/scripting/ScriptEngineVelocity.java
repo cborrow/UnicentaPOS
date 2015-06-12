@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (c) 2009-2011 uniCenta
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta & previous Openbravo POS works
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -19,6 +19,7 @@
 
 package com.openbravo.pos.scripting;
 
+import com.openbravo.pos.forms.AppView;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -38,6 +39,8 @@ class ScriptEngineVelocity implements ScriptEngine {
     private static VelocityEngine m_ve = null;
 
     private VelocityContext c = null;
+    private AppView m_App;
+    
     
     /** Creates a new instance of ScriptEngineVelocity */
     public ScriptEngineVelocity() throws ScriptException {
@@ -63,18 +66,20 @@ class ScriptEngineVelocity implements ScriptEngine {
                 throw new ScriptException("Cannot initialize Velocity Engine", e);
             } 
         }
-         c = new VelocityContext();
+         c = new VelocityContext();      
     }
     
+    @Override
     public void put(String key, Object value) {
         c.put(key, value);
     }
+    @Override
     public Object get(String key) {
         return c.get(key);
     }
     
+    @Override
     public Object eval(String src) throws ScriptException {
-        
         if (m_ve == null) {
             throw new ScriptException("Velocity engine not initialized.");
         } else {

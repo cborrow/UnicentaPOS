@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (c) 2009-2011 uniCenta
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -19,29 +19,30 @@
 
 package com.openbravo.pos.admin;
 
-import javax.swing.*;
-import com.openbravo.pos.forms.AppLocal;
-import java.awt.CardLayout;
-import java.awt.Component;
-import java.util.UUID;
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.gui.ComboBoxValModel;
 import com.openbravo.data.loader.ImageUtils;
 import com.openbravo.data.user.DirtyManager;
 import com.openbravo.data.user.EditorRecord;
 import com.openbravo.format.Formats;
+import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.util.Base64Encoder;
+import java.awt.CardLayout;
+import java.awt.Component;
+import java.util.UUID;
+import javax.swing.JPanel;
 
 /**
  *
  * @author adrianromero
  */
-public class ResourcesView extends JPanel implements EditorRecord {
+public final class ResourcesView extends JPanel implements EditorRecord {
     
     private Object m_oId;
     private ComboBoxValModel m_ResourceModel;
             
-    /** Creates new form ResourcesEditor */
+    /** Creates new form ResourcesEditor
+     * @param dirty */
     public ResourcesView(DirtyManager dirty) {
         initComponents();
         
@@ -59,6 +60,10 @@ public class ResourcesView extends JPanel implements EditorRecord {
         writeValueEOF();        
     }
 
+    /**
+     *
+     */
+    @Override
     public void writeValueEOF() {
         m_oId = null;
         m_jName.setText(null);
@@ -69,8 +74,12 @@ public class ResourcesView extends JPanel implements EditorRecord {
         m_jType.setEnabled(false);
         m_jText.setEnabled(false);
         m_jImage.setEnabled(false);
-    }    
-    
+    }
+
+    /**
+     *
+     */
+    @Override
     public void writeValueInsert() {
         m_oId = null;
         m_jName.setText(null);
@@ -83,6 +92,11 @@ public class ResourcesView extends JPanel implements EditorRecord {
         m_jImage.setEnabled(true);
     }
     
+    /**
+     *
+     * @param value
+     */
+    @Override
     public void writeValueDelete(Object value) {
         Object[] resource = (Object[]) value;
         m_oId = resource[0];
@@ -111,8 +125,13 @@ public class ResourcesView extends JPanel implements EditorRecord {
         m_jType.setEnabled(false);
         m_jText.setEnabled(false);
         m_jImage.setEnabled(false);       
-    }  
-    
+    }
+
+    /**
+     *
+     * @param value
+     */
+    @Override
     public void writeValueEdit(Object value) {
         Object[] resource = (Object[]) value;
         m_oId = resource[0];
@@ -143,6 +162,12 @@ public class ResourcesView extends JPanel implements EditorRecord {
         m_jImage.setEnabled(true);
     }
     
+    /**
+     *
+     * @return
+     * @throws BasicException
+     */
+    @Override
     public Object createValue() throws BasicException {
         Object[] resource = new Object[4];
 
@@ -164,10 +189,19 @@ public class ResourcesView extends JPanel implements EditorRecord {
         return resource;
     }
     
+    /**
+     *
+     * @return
+     */
+    @Override
     public Component getComponent() {
         return this;
     }
     
+    /**
+     *
+     */
+    @Override
     public void refresh() {
     }
     
@@ -199,7 +233,7 @@ public class ResourcesView extends JPanel implements EditorRecord {
 
         m_jContainer.setLayout(new java.awt.CardLayout());
 
-        m_jText.setFont(new java.awt.Font("DialogInput", 0, 12));
+        m_jText.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jScrollPane1.setViewportView(m_jText);
 
         m_jContainer.add(jScrollPane1, "text");
@@ -208,8 +242,12 @@ public class ResourcesView extends JPanel implements EditorRecord {
 
         jPanel3.add(m_jContainer, java.awt.BorderLayout.CENTER);
 
+        jLabel2.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel2.setText(AppLocal.getIntString("label.resname")); // NOI18N
 
+        m_jName.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+
+        m_jType.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         m_jType.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 m_jTypeActionPerformed(evt);
@@ -229,7 +267,8 @@ public class ResourcesView extends JPanel implements EditorRecord {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(m_jName, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(m_jType, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(m_jType, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -237,9 +276,9 @@ public class ResourcesView extends JPanel implements EditorRecord {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(m_jName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(m_jType, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(m_jName, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(m_jType, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 327, Short.MAX_VALUE)
                 .addContainerGap())

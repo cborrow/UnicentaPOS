@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (c) 2009-2011 uniCenta
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta & previous Openbravo POS works
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -23,16 +23,29 @@ import java.text.ParseException;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+/**
+ *
+ * @author JG uniCenta
+ */
 public class FormatsRESOURCE extends Formats {
     
     private ResourceBundle m_rb;
     private String m_sPrefix;
     
-    /** Creates a new instance of FormatsRESOURCE */
+    /** Creates a new instance of FormatsRESOURCE
+     * @param rb
+     * @param sPrefix */
     public FormatsRESOURCE(ResourceBundle rb, String sPrefix) {
         m_rb = rb;
         m_sPrefix = sPrefix;
     }
+
+    /**
+     *
+     * @param value
+     * @return
+     */
+    @Override
     protected String formatValueInt(Object value) {
         try {
             return m_rb.getString(m_sPrefix + (String) value);
@@ -40,9 +53,23 @@ public class FormatsRESOURCE extends Formats {
             return (String) value;
         }
     }   
+
+    /**
+     *
+     * @param value
+     * @return
+     * @throws ParseException
+     */
+    @Override
     protected Object parseValueInt(String value) throws ParseException {
         return value;
     }
+
+    /**
+     *
+     * @return
+     */
+    @Override
     public int getAlignment() {
         return javax.swing.SwingConstants.LEFT;
     }    

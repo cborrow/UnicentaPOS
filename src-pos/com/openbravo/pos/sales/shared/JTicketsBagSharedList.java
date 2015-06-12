@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (c) 2009-2011 uniCenta
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta & previous Openbravo POS works
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -22,17 +22,16 @@ package com.openbravo.pos.sales.shared;
 
 import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.sales.SharedTicketInfo;
-import java.awt.Component;
-import java.awt.Dialog;
-import java.awt.Dimension;
-import java.awt.Frame;
-import java.awt.Insets;
-import java.awt.Window;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
+/**
+ *
+ * @author JG uniCenta
+ */
 public class JTicketsBagSharedList extends javax.swing.JDialog {
     
     private String m_sDialogTicket;
@@ -44,19 +43,30 @@ public class JTicketsBagSharedList extends javax.swing.JDialog {
     /** Creates new form JTicketsBagSharedList */
     private JTicketsBagSharedList(java.awt.Dialog parent, boolean modal) {
         super(parent, modal);
-    }  
-    
+    }
+
+    /**
+     *
+     * @param atickets
+     * @return
+     */
     public String showTicketsList(java.util.List<SharedTicketInfo> atickets) {
         
-        for (int i = 0; i < atickets.size(); i++) {
-            m_jtickets.add(new JButtonTicket(atickets.get(i)));                
+        for (SharedTicketInfo aticket : atickets) {
+            m_jtickets.add(new JButtonTicket(aticket));
         }  
      
         m_sDialogTicket = null;
+
         setVisible(true);
         return m_sDialogTicket;
-    }  
-        
+    }
+
+    /**
+     *
+     * @param ticketsbagshared
+     * @return
+     */
     public static JTicketsBagSharedList newJDialog(JTicketsBagShared ticketsbagshared) {
         
         Window window = getWindow(ticketsbagshared);
@@ -70,6 +80,8 @@ public class JTicketsBagSharedList extends javax.swing.JDialog {
         mydialog.initComponents();
         
         mydialog.jScrollPane1.getVerticalScrollBar().setPreferredSize(new Dimension(35, 35));
+        mydialog.jScrollPane1.getHorizontalScrollBar().setPreferredSize(new Dimension(25, 25));
+
         
         return mydialog;
     }
@@ -86,7 +98,7 @@ public class JTicketsBagSharedList extends javax.swing.JDialog {
 
     private class JButtonTicket extends JButton {
         
-        private SharedTicketInfo m_Ticket;
+        private final SharedTicketInfo m_Ticket;
         
         public JButtonTicket(SharedTicketInfo ticket){
             
@@ -97,20 +109,28 @@ public class JTicketsBagSharedList extends javax.swing.JDialog {
             setFocusable(false);
             setRequestFocusEnabled(false);
             setMargin(new Insets(8, 14, 8, 14));
-            //setFont(new java.awt.Font ("Dialog", 1, 24));    
-            //setBackground(new java.awt.Color (220, 220, 220));
-            addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent evt) {
-                    
-                    // Selecciono el ticket
-                    m_sDialogTicket = m_Ticket.getId();
-   
-                    // y oculto la ventana
-                    JTicketsBagSharedList.this.setVisible(false);
-                }
-            });
+            setFont(new java.awt.Font ("Dialog", 0, 14));
+            setBackground(new java.awt.Color (220, 220, 220));
+            addActionListener(new ActionListenerImpl());
             
             setText(ticket.getName());
+            
+        }
+
+        private class ActionListenerImpl implements ActionListener {
+
+            public ActionListenerImpl() {
+            }
+
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                        
+                        // Selecciono el ticket
+                        m_sDialogTicket = m_Ticket.getId();
+       
+                        // y oculto la ventana
+                        JTicketsBagSharedList.this.setVisible(false);
+                    }
         }
     }
     
@@ -131,14 +151,17 @@ public class JTicketsBagSharedList extends javax.swing.JDialog {
         m_jButtonCancel = new javax.swing.JButton();
 
         setTitle(AppLocal.getIntString("caption.tickets")); // NOI18N
-        setResizable(false);
+        setPreferredSize(new java.awt.Dimension(400, 100));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
         jPanel1.setLayout(new java.awt.BorderLayout());
 
+        jPanel2.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jPanel2.setMaximumSize(new java.awt.Dimension(600, 400));
         jPanel2.setLayout(new java.awt.BorderLayout());
 
         m_jtickets.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        m_jtickets.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         m_jtickets.setLayout(new java.awt.GridLayout(0, 1, 5, 5));
         jPanel2.add(m_jtickets, java.awt.BorderLayout.NORTH);
 
@@ -151,6 +174,7 @@ public class JTicketsBagSharedList extends javax.swing.JDialog {
         jPanel3.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
         jPanel3.add(jPanel4);
 
+        m_jButtonCancel.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         m_jButtonCancel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/cancel.png"))); // NOI18N
         m_jButtonCancel.setText(AppLocal.getIntString("Button.Close")); // NOI18N
         m_jButtonCancel.setFocusPainted(false);
@@ -166,8 +190,8 @@ public class JTicketsBagSharedList extends javax.swing.JDialog {
 
         getContentPane().add(jPanel3, java.awt.BorderLayout.SOUTH);
 
-        java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
-        setBounds((screenSize.width-340)/2, (screenSize.height-272)/2, 340, 272);
+        setSize(new java.awt.Dimension(416, 351));
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void m_jButtonCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_jButtonCancelActionPerformed

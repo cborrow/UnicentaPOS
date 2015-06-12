@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (c) 2009-2011 uniCenta
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta & previous Openbravo POS works
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -27,41 +27,82 @@ import com.openbravo.data.loader.SerializableWrite;
 
 /**
  *
- * @author adrianromero
+ * JG - add AppUser
+ * JG - Aug 2014 Add Customer
+ * Format is CustomerName : Ticket : User
  */
 public class SharedTicketInfo implements SerializableRead, SerializableWrite {
     
     private static final long serialVersionUID = 7640633837719L;
     private String id;
     private String name;
-//    private String content;
+    private String UserName;
+    private String CustomerName;
+    private String m_iTicketId;
     
     /** Creates a new instance of SharedTicketInfo */
     public SharedTicketInfo() {
     }
     
+    /**
+     *
+     * @param dr
+     * @throws BasicException
+     */
+    @Override
     public void readValues(DataRead dr) throws BasicException {
         id = dr.getString(1);
         name = dr.getString(2);
-//        content = dr.getString(3);
+        UserName = dr.getString(3);
+        CustomerName = dr.getString(4);  
+        m_iTicketId = null;
     }   
+
+    /**
+     *
+     * @param dp
+     * @throws BasicException
+     */
+    @Override
     public void writeValues(DataWrite dp) throws BasicException {
         dp.setString(1, id);
         dp.setString(2, name);
-//        dp.setString(3, content);
+        dp.setString(3, UserName);
+        dp.setString(4, CustomerName);        
     }
     
+    /**
+     *
+     * @return
+     */
     public String getId() {
         return id;
     }
     
+    /**
+     *
+     * @return
+     */
     public String getName() {
         return name;
     }
 
-// JG Testing SharedTicket.content display in Dialog
-//    public String getContent() {
-//        return content;
-//    }
+// JG Aug 2014 - Add User info
 
+    /**
+     *
+     * @return
+     */
+        public String getAppUser() {
+        return UserName;
+    }
+// JG Aug 2014 - Add Customer info
+
+    /**
+     *
+     * @return
+     */
+        public String getCustomerName() {
+        return CustomerName;
+    }        
 }

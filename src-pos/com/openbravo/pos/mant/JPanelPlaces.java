@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (c) 2009-2011 uniCenta
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta & previous Openbravo POS works
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -18,20 +18,20 @@
 //    along with uniCenta oPOS.  If not, see <http://www.gnu.org/licenses/>.
 
 package com.openbravo.pos.mant;
-import javax.swing.ListCellRenderer;
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.gui.ListCellRendererBasic;
-import com.openbravo.pos.forms.AppLocal;
-import com.openbravo.data.loader.TableDefinition;
-import com.openbravo.format.Formats;
 import com.openbravo.data.loader.Datas;
+import com.openbravo.data.loader.TableDefinition;
 import com.openbravo.data.loader.Vectorer;
 import com.openbravo.data.user.EditorRecord;
-import com.openbravo.data.user.SaveProvider;
 import com.openbravo.data.user.ListProvider;
 import com.openbravo.data.user.ListProviderCreator;
+import com.openbravo.data.user.SaveProvider;
+import com.openbravo.format.Formats;
+import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.forms.DataLogicSales;
-import com.openbravo.pos.panels.*;
+import com.openbravo.pos.panels.JPanelTable;
+import javax.swing.ListCellRenderer;
 
 /**
  *
@@ -46,6 +46,10 @@ public class JPanelPlaces extends JPanelTable {
     public JPanelPlaces() {
     }
     
+    /**
+     *
+     */
+    @Override
     protected void init() {
         DataLogicSales dlSales = null;
         dlSales = (DataLogicSales) app.getBean("com.openbravo.pos.forms.DataLogicSales");
@@ -61,32 +65,64 @@ public class JPanelPlaces extends JPanelTable {
         jeditor = new PlacesEditor(dlSales, dirty); 
     }
         
+    /**
+     *
+     * @return
+     */
+    @Override
     public ListProvider getListProvider() {
         return new ListProviderCreator(tplaces);
     }
     
+    /**
+     *
+     * @return
+     */
+    @Override
     public SaveProvider getSaveProvider() {
         return new SaveProvider(tplaces);      
     }
     
+    /**
+     *
+     * @return
+     */
     @Override
     public Vectorer getVectorer() {
         return tplaces.getVectorerBasic(new int[]{1});
     }
     
+    /**
+     *
+     * @return
+     */
     @Override
     public ListCellRenderer getListCellRenderer() {
         return new ListCellRendererBasic(tplaces.getRenderStringBasic(new int[]{1}));
     }
     
+    /**
+     *
+     * @return
+     */
+    @Override
     public EditorRecord getEditor() {
         return jeditor;
     }
 
+    /**
+     *
+     * @return
+     */
+    @Override
     public String getTitle() {
         return AppLocal.getIntString("Menu.Tables");
-    }      
-    
+    }
+
+    /**
+     *
+     * @throws BasicException
+     */
     @Override
     public void activate() throws BasicException {
         jeditor.activate(); // primero activo el editor 

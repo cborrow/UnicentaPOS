@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (c) 2009-2011 uniCenta
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -20,17 +20,23 @@
 package com.openbravo.pos.payment;
 
 import com.openbravo.pos.customers.CustomerInfoExt;
-import java.awt.Component;
 import com.openbravo.pos.forms.AppLocal;
+import java.awt.Component;
 
+/**
+ *
+ * @author JG uniCenta
+ */
 public class JPaymentRefund extends javax.swing.JPanel implements JPaymentInterface {
     
-    private JPaymentNotifier m_notifier;
+    private final JPaymentNotifier m_notifier;
     private double m_dTotal;
     
-    private String m_sName;
+    private final String m_sName;
     
-    /** Creates new form JPaymentChequeRefund */
+    /** Creates new form JPaymentChequeRefund
+     * @param notifier
+     * @param sName */
     public JPaymentRefund(JPaymentNotifier notifier, String sName) {
         
         m_notifier = notifier;
@@ -39,15 +45,33 @@ public class JPaymentRefund extends javax.swing.JPanel implements JPaymentInterf
         initComponents();
     }
     
+    /**
+     *
+     * @param customerext
+     * @param dTotal
+     * @param transID
+     */
+    @Override
     public void activate(CustomerInfoExt customerext, double dTotal, String transID) {
         m_dTotal = dTotal;
         
         m_notifier.setStatus(true, true);
     }
     
+    /**
+     *
+     * @return
+     */
+    @Override
     public PaymentInfo executePayment() {
         return new PaymentInfoTicket(m_dTotal, m_sName);
     }
+
+    /**
+     *
+     * @return
+     */
+    @Override
     public Component getComponent() {
         return this;
     } 
@@ -62,7 +86,7 @@ public class JPaymentRefund extends javax.swing.JPanel implements JPaymentInterf
 
         jLabel1 = new javax.swing.JLabel();
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Arial", 1, 16)); // NOI18N
         jLabel1.setText(AppLocal.getIntString("message.paymentcashneg")); // NOI18N
         add(jLabel1);
     }// </editor-fold>//GEN-END:initComponents

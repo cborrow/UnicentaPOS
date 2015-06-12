@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (c) 2009-2011 uniCenta
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta & previous Openbravo POS works
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -19,6 +19,9 @@
 
 package com.openbravo.pos.printer.javapos;
 
+import com.openbravo.data.loader.ImageUtils;
+import com.openbravo.pos.printer.DevicePrinter;
+import com.openbravo.pos.printer.TicketPrinterException;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -29,10 +32,11 @@ import jpos.CashDrawer;
 import jpos.JposException;
 import jpos.POSPrinter;
 import jpos.POSPrinterConst;
-import com.openbravo.data.loader.ImageUtils;
-import com.openbravo.pos.printer.DevicePrinter;
-import com.openbravo.pos.printer.TicketPrinterException;
 
+/**
+ *
+ * @author JG uniCenta
+ */
 public class DevicePrinterJavaPOS  implements DevicePrinter {
     
     private static final String JPOS_SIZE0 = "\u001b|1C";
@@ -49,9 +53,12 @@ public class DevicePrinterJavaPOS  implements DevicePrinter {
     private POSPrinter m_printer = null;
     private CashDrawer m_drawer = null;
     
-    private StringBuffer m_sline;
+    private StringBuilder m_sline;
 
-    /** Creates a new instance of DevicePrinterJavaPOS */
+    /** Creates a new instance of DevicePrinterJavaPOS
+     * @param sDevicePrinterName
+     * @param sDeviceDrawerName
+     * @throws com.openbravo.pos.printer.TicketPrinterException */
     public DevicePrinterJavaPOS(String sDevicePrinterName, String sDeviceDrawerName) throws TicketPrinterException {
         
         m_sName = sDevicePrinterName;
@@ -81,18 +88,44 @@ public class DevicePrinterJavaPOS  implements DevicePrinter {
         }
     }
    
+    /**
+     *
+     * @return
+     */
+    @Override
     public String getPrinterName() {
         return m_sName;
     }
+
+    /**
+     *
+     * @return
+     */
+    @Override
     public String getPrinterDescription() {
         return null;
     }   
+
+    /**
+     *
+     * @return
+     */
+    @Override
     public JComponent getPrinterComponent() {
         return null;
     }
+
+    /**
+     *
+     */
+    @Override
     public void reset() {
     }
     
+    /**
+     *
+     */
+    @Override
     public void beginReceipt() {
         try {
             m_printer.transactionPrint(POSPrinterConst.PTR_S_RECEIPT, POSPrinterConst.PTR_TP_TRANSACTION);
@@ -100,22 +133,41 @@ public class DevicePrinterJavaPOS  implements DevicePrinter {
         }
     }
     
+    /**
+     *
+     * @param image
+     */
+    @Override
     public void printImage(BufferedImage image) {
         try {
             if (m_printer.getCapRecBitmap()) { // si podemos imprimir bitmaps.
                 
                 File f = File.createTempFile("jposimg", ".png");
-                OutputStream out = new FileOutputStream(f);
-                out.write(ImageUtils.writeImage(image));
-                out.close();
+                try (OutputStream out = new FileOutputStream(f)) {
+                    out.write(ImageUtils.writeImage(image));
+                }
                 
                 m_printer.printBitmap(POSPrinterConst.PTR_S_RECEIPT, f.getAbsolutePath(), POSPrinterConst.PTR_BM_ASIS, POSPrinterConst.PTR_BM_CENTER);
             }
-        } catch (IOException eIO) {
-        } catch (JposException e) {
+// JG 16 May 12 use multicatch
+        } catch (IOException | JposException eIO) {
         }
     }
     
+    /**
+     *
+     */
+    @Override
+    public void printLogo(){   
+    }
+
+    /**
+     *
+     * @param type
+     * @param position
+     * @param code
+     */
+    @Override
     public void printBarCode(String type, String position, String code) {
         try {
             if (m_printer.getCapRecBarCode()) { // si podemos imprimir codigos de barras
@@ -129,8 +181,13 @@ public class DevicePrinterJavaPOS  implements DevicePrinter {
         }
     }
     
+    /**
+     *
+     * @param iTextSize
+     */
+    @Override
     public void beginLine(int iTextSize) {
-        m_sline = new StringBuffer();
+        m_sline = new StringBuilder();
         if (iTextSize == DevicePrinter.SIZE_0) {
             m_sline.append(JPOS_SIZE0);
         } else if (iTextSize == DevicePrinter.SIZE_1) {
@@ -144,6 +201,12 @@ public class DevicePrinterJavaPOS  implements DevicePrinter {
         }
     }
     
+    /**
+     *
+     * @param iStyle
+     * @param sText
+     */
+    @Override
     public void printText(int iStyle, String sText) {
         
         if ((iStyle & DevicePrinter.STYLE_BOLD) != 0) {
@@ -155,6 +218,10 @@ public class DevicePrinterJavaPOS  implements DevicePrinter {
         m_sline.append(sText);
     }
     
+    /**
+     *
+     */
+    @Override
     public void endLine() {
         
         m_sline.append(JPOS_LF);
@@ -165,6 +232,10 @@ public class DevicePrinterJavaPOS  implements DevicePrinter {
         m_sline = null;
     }
     
+    /**
+     *
+     */
+    @Override
     public void endReceipt() {
         try {
             // cut the receipt
@@ -174,8 +245,12 @@ public class DevicePrinterJavaPOS  implements DevicePrinter {
             m_printer.transactionPrint(POSPrinterConst.PTR_S_RECEIPT, POSPrinterConst.PTR_TP_NORMAL);
         } catch (JposException e) {
         }
-    }     
-    
+    }
+
+    /**
+     *
+     */
+    @Override
     public void openDrawer() {
         
         if (m_drawer != null) {
@@ -183,6 +258,16 @@ public class DevicePrinterJavaPOS  implements DevicePrinter {
                 m_drawer.openDrawer();
             } catch (JposException e) {
             }
+        }
+    }
+    
+    @Override
+    public void cutReceipt() {
+        try {
+            m_printer.printNormal(POSPrinterConst.PTR_S_RECEIPT, JPOS_CUT);
+        }
+        catch(JposException e) {
+            
         }
     }
     

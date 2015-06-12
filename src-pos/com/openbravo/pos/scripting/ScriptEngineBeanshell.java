@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (c) 2009-2011 uniCenta
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta & previous Openbravo POS works
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -37,6 +37,7 @@ class ScriptEngineBeanshell implements ScriptEngine {
         i = new Interpreter();
     }
     
+    @Override
     public void put(String key, Object value) {
         
         try {
@@ -45,6 +46,7 @@ class ScriptEngineBeanshell implements ScriptEngine {
         }
     }
     
+    @Override
     public Object get(String key) {
         
         try {
@@ -54,6 +56,7 @@ class ScriptEngineBeanshell implements ScriptEngine {
         }
     }
     
+    @Override
     public Object eval(String src) throws ScriptException {
 
         try {

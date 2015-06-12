@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (c) 2009-2011 uniCenta
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -19,11 +19,11 @@
 
 package com.openbravo.pos.ticket;
 
-import javax.swing.*;
-import java.awt.*;
-
-import com.openbravo.pos.util.ThumbNailBuilder;
 import com.openbravo.format.Formats;
+import com.openbravo.pos.util.ThumbNailBuilder;
+import java.awt.*;
+import javax.swing.*;
+import com.openbravo.pos.forms.AppLocal;
 
 /**
  *
@@ -36,7 +36,7 @@ public class ProductRenderer extends DefaultListCellRenderer {
 
     /** Creates a new instance of ProductRenderer */
     public ProductRenderer() {   
-        tnbprod = new ThumbNailBuilder(64, 32, "com/openbravo/images/package.png");
+        tnbprod = new ThumbNailBuilder(48,48, "com/openbravo/images/package.png");      
     }
 
     @Override
@@ -45,10 +45,17 @@ public class ProductRenderer extends DefaultListCellRenderer {
         
         ProductInfoExt prod = (ProductInfoExt) value;
         if (prod != null) {
-            setText("<html>" + prod.getReference() + " - " + prod.getName() + "<br>&nbsp;&nbsp;&nbsp;&nbsp;" + Formats.CURRENCY.formatValue(new Double(prod.getPriceSell())));
+
+// JG  June 2014 Added Stock Units
+//            setText("<html>" + prod.getReference() + " - " + prod.getName() + "<br>&nbsp;&nbsp;&nbsp;&nbsp;" + Formats.CURRENCY.formatValue(prod.getPriceSell()));
+            setText("<html>" + prod.getReference() + " - " + prod.getName() + "<br> " +
+                    "<b>" + AppLocal.getIntString("label.stockunits") +    ":</b> " + Formats.DOUBLE.formatValue(prod.getStockUnits()) + "<br /> " +
+                    "<b>" + AppLocal.getIntString("label.prodpricesell") + ":</b> " + 
+                    Formats.CURRENCY.formatValue(prod.getPriceSell()));
             Image img = tnbprod.getThumbNail(prod.getImage());
             setIcon(img == null ? null :new ImageIcon(img));
         }
+
         return this;
     }      
 }

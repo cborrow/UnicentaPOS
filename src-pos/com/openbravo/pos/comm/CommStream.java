@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (c) 2009-2011 uniCenta
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta & previous Openbravo POS works
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -19,8 +19,13 @@
 
 package com.openbravo.pos.comm;
 
-import gnu.io.*;
-import java.io.*;
+import gnu.io.CommPort;
+import gnu.io.CommPortIdentifier;
+import gnu.io.ParallelPort;
+import gnu.io.SerialPort;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  *
@@ -36,7 +41,8 @@ public class CommStream {
     private OutputStream m_out;
     private InputStream m_in;
     
-    /** Creates a new instance of CommPort */
+    /** Creates a new instance of CommPort
+     * @param port */
     public CommStream(String port) {
         m_sPort = port;
         
@@ -73,6 +79,10 @@ public class CommStream {
         } 
     }
     
+    /**
+     *
+     * @throws IOException
+     */
     public void closeAll() throws IOException {
         
         if (m_out != null) {
@@ -85,15 +95,27 @@ public class CommStream {
         }
     }
     
+    /**
+     *
+     * @return
+     */
     public String getPort() {
         return m_sPort;
     }
     
+    /**
+     *
+     * @return
+     */
     public InputStream getIn() {
         init();
         return m_in;
     }
     
+    /**
+     *
+     * @return
+     */
     public OutputStream getOut() {
         init();
         return m_out;

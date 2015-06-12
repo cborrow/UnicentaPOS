@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (c) 2009-2011 uniCenta
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta & previous Openbravo POS works
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -19,16 +19,31 @@
 
 package com.openbravo.pos.printer.escpos;
 
+/**
+ *
+ * @author JG uniCenta
+ */
 public class UnicodeTranslatorSurePOS extends UnicodeTranslator {
     
     /** Creates a new instance of UnicodeTranslatorInt */
     public UnicodeTranslatorSurePOS() {
     }
     
+    /**
+     *
+     * @return
+     */
+    @Override
     public byte[] getCodeTable() {
         return new byte[] {0x02}; // Multilingual International 858            
     }
     
+    /**
+     *
+     * @param sChar
+     * @return
+     */
+    @Override
     public byte transChar(char sChar) {
         if ((sChar >= 0x0000) && (sChar < 0x0080)) {
             return (byte) sChar;

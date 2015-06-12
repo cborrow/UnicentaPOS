@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (c) 2009-2011 uniCenta
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta & previous Openbravo POS works
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -30,6 +30,9 @@ import com.openbravo.data.loader.DataRead;
  */
 public class RoleExtInfo extends RoleInfo {
     
+    /**
+     *
+     */
     protected byte[] m_aPermissions;
     
     /** Creates a new instance of RoleExtInfo */
@@ -38,19 +41,39 @@ public class RoleExtInfo extends RoleInfo {
         m_aPermissions = null;
     }
     
+    /**
+     *
+     * @param dr
+     * @throws BasicException
+     */
+    @Override
     public void readValues(DataRead dr) throws BasicException {
         m_sName = dr.getString(1);
         m_aPermissions = dr.getBytes(2);
     }   
     
     //  implements Vectorer, ComparatorCreator
-    public static String[] getHeaders() {
+
+    /**
+     *
+     * @return
+     */
+        public static String[] getHeaders() {
         return new String[] {"Name"};
     }
     
+    /**
+     *
+     * @return
+     */
     public String[] toStringArray() {
         return new String[] {m_sName};
     } 
+
+    /**
+     *
+     * @return
+     */
     public Comparable[] toComparableArray() {
         return new Comparable[] {m_sName};
     }

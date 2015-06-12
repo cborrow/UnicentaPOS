@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
-//    Copyright (c) 2009-2011 uniCenta
-//    http://www.unicenta.net/unicentaopos
+//    Copyright (c) 2009-2014 uniCenta & previous Openbravo POS works
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -19,22 +19,54 @@
 
 package com.openbravo.data.gui;
 
+import com.openbravo.data.loader.LocalRes;
 import java.awt.*;
 import javax.swing.*;
-import com.openbravo.data.loader.LocalRes;
 
+/**
+ *
+ * @author JG uniCenta
+ */
 public class MessageInf {
         
     // SIGNAL_WORD'S
-    public final static int SGN_DANGER = 0xFF000000; // Death or serious injury will occur
+
+    /**
+     *
+     */
+        public final static int SGN_DANGER = 0xFF000000; // Death or serious injury will occur
+
+    /**
+     *
+     */
     public final static int SGN_WARNING = 0xFE000000; // Death or serious injury may occur
+
+    /**
+     *
+     */
     public final static int SGN_CAUTION = 0xFD000000; // Minor or moderate injury may occur
+
+    /**
+     *
+     */
     public final static int SGN_NOTICE = 0xFC000000; // Damage to property may occur
+
+    /**
+     *
+     */
     public final static int SGN_IMPORTANT = 0xFA000000; // Operating or maintenance instructions or additional information
+
+    /**
+     *
+     */
     public final static int SGN_SUCCESS = 0xFB000000;
     
     // ERROR_CLASS'ES
-    public final static int CLS_GENERIC = 0x00000000;
+
+    /**
+     *
+     */
+        public final static int CLS_GENERIC = 0x00000000;
     
     // ERROR_CODE'S
     
@@ -47,36 +79,59 @@ public class MessageInf {
     // CAUSE
     private Object m_eCause;
     
-    /** Creates a new instance of MessageInf */
+    /** Creates a new instance of MessageInf
+     * @param iSignalWord
+     * @param sHazard
+     * @param e */
     public MessageInf(int iSignalWord, String sHazard, Object e) {
-        m_iMsgNumber = iSignalWord | CLS_GENERIC;
+//        m_iMsgNumber = iSignalWord | CLS_GENERIC;
+        m_iMsgNumber = iSignalWord;        
         m_sHazard = sHazard;
         m_sConsequences = "";
         m_sAvoiding = "";
         m_eCause = e;
     }
-    /** Creates a new instance of MessageInf */
+    /** Creates a new instance of MessageInf
+     * @param iSignalWord
+     * @param sHazard */
     public MessageInf(int iSignalWord, String sHazard) {
         this (iSignalWord, sHazard, null);
     }
     
-    /** Creates a new instance of MessageInf */
+    /** Creates a new instance of MessageInf
+     * @param e */
     public MessageInf(Throwable e) {
         this(SGN_WARNING, e.getLocalizedMessage(), e);
     }
     
+    /**
+     *
+     * @param parent
+     */
     public void show(Component parent) {
         JMessageDialog.showMessage(parent, this);
     }
     
+    /**
+     *
+     * @return
+     */
     public Object getCause() {
         return m_eCause;
     }
     
+    /**
+     *
+     * @return
+     */
     public int getSignalWord() {
         return m_iMsgNumber & 0xFF000000;
     }
     
+    /**
+     *
+     * @return
+     */
     public Icon getSignalWordIcon() {
         int iSignalWord = getSignalWord();
         if (iSignalWord == SGN_DANGER) {
@@ -96,9 +151,13 @@ public class MessageInf {
         }
     }
     
+    /**
+     *
+     * @return
+     */
     public String getErrorCodeMsg() {
         
-        StringBuffer sb = new StringBuffer();       
+        StringBuilder sb = new StringBuilder();       
         int iSignalWord = getSignalWord();
         if (iSignalWord == SGN_DANGER) {
             sb.append("DNG_");
@@ -134,10 +193,13 @@ public class MessageInf {
         return new String(aStr);
     }
 
-    
+    /**
+     *
+     * @return
+     */
     public String getMessageMsg() {
         
-        StringBuffer sb = new StringBuffer();     
+        StringBuilder sb = new StringBuilder();     
         int iSignalWord = getSignalWord();
         if (iSignalWord == SGN_DANGER) {
             sb.append(LocalRes.getIntString("sgn.danger"));

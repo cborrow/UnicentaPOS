@@ -1,6 +1,6 @@
 //    uniCenta oPOS  - Touch Friendly Point Of Sale
 //    Copyright (C) 2008-2009 Openbravo, S.L.
-//    http://www.unicenta.net/unicentaopos
+//    http://www.unicenta.com
 //
 //    This file is part of uniCenta oPOS
 //
@@ -22,16 +22,8 @@ package com.openbravo.pos.payment;
 import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.forms.AppProperties;
 import com.openbravo.pos.util.AltEncrypter;
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
+import java.io.*;
+import java.net.*;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.HashMap;
@@ -52,6 +44,10 @@ public class PaymentGatewayPlanetauthorize implements PaymentGateway {
     private String m_sCommercePassword;
     private boolean m_bTestMode;
     
+    /**
+     *
+     * @param props
+     */
     public PaymentGatewayPlanetauthorize (AppProperties props) {
         m_sCommerceID = props.getProperty("payment.commerceid");
 
@@ -61,13 +57,20 @@ public class PaymentGatewayPlanetauthorize implements PaymentGateway {
         m_bTestMode = Boolean.valueOf(props.getProperty("payment.testmode")).booleanValue();
     }
     
+    /**
+     *
+     */
     public PaymentGatewayPlanetauthorize() {
         
     }
     
+    /**
+     *
+     * @param payinfo
+     */
     @Override
     public void execute(PaymentInfoMagcard payinfo) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         
         try {
             sb.append("username="); //test=demo
