@@ -56,7 +56,7 @@ public class SharedTicketInfo implements SerializableRead, SerializableWrite {
         UserName = dr.getString(3);
         CustomerName = dr.getString(4);  
         m_iTicketId = null;
-    }   
+    }
 
     /**
      *
@@ -93,7 +93,7 @@ public class SharedTicketInfo implements SerializableRead, SerializableWrite {
      *
      * @return
      */
-        public String getAppUser() {
+    public String getAppUser() {
         return UserName;
     }
 // JG Aug 2014 - Add Customer info
@@ -102,7 +102,16 @@ public class SharedTicketInfo implements SerializableRead, SerializableWrite {
      *
      * @return
      */
-        public String getCustomerName() {
+    public String getCustomerName() {
         return CustomerName;
-    }        
+    }
+    
+    public String customerName() {
+        String[] parts = name.split("-");
+        
+        if(parts.length == 3) {
+            return parts[2].trim();
+        }
+        return null;
+    }
 }
