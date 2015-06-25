@@ -7,11 +7,16 @@ package com.openbravo.pos.sales.shared;
 
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.gui.MessageInf;
+import com.openbravo.data.user.ListProvider;
+import com.openbravo.data.user.ListProviderCreator;
 import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.sales.DataLogicReceipts;
 import com.openbravo.pos.sales.SharedTicketInfo;
 import com.openbravo.pos.ticket.TicketInfo;
 import com.openbravo.pos.ticket.TicketLineInfo;
+import com.openbravo.pos.customers.CustomerInfo;
+import com.openbravo.pos.customers.CustomerInfoExt;
+import com.openbravo.pos.customers.DataLogicCustomers;
 import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.Dimension;
@@ -20,6 +25,7 @@ import java.awt.Insets;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
@@ -32,6 +38,8 @@ public class JTicketsBagMergeList extends javax.swing.JDialog {
     private String m_sDialogTicket;
     private String m_sPrimaryTicket;
     private String m_sSecondaryTicket;
+    private List<SharedTicketInfo> ticketList;
+    private List<CustomerInfo> customerList;
     private DataLogicReceipts dlReceipts;
     /**
      * Creates new form JTicketsBagMerge
@@ -54,8 +62,10 @@ public class JTicketsBagMergeList extends javax.swing.JDialog {
         this.setPreferredSize(new Dimension(400, 300));
     }
     
-    public String showTicketsList(DataLogicReceipts dlReceipts, java.util.List<SharedTicketInfo> atickets) {
+    public String showTicketsList(DataLogicReceipts dlReceipts, java.util.List<SharedTicketInfo> atickets, java.util.List<CustomerInfo> customers) {
         this.dlReceipts = dlReceipts;
+        this.ticketList = atickets;
+        this.customerList = customers;
         
         for (SharedTicketInfo aticket : atickets) {
             m_jtickets.add(new JTicketsBagMergeList.JButtonTicket(aticket));
@@ -68,6 +78,36 @@ public class JTicketsBagMergeList extends javax.swing.JDialog {
         setVisible(true);
        
         return m_sDialogTicket;
+    }
+    
+    public void updateTicketsList() {
+        java.util.List<SharedTicketInfo> results = new java.util.ArrayList<SharedTicketInfo>();
+        String query = jTextField1.getText();
+
+        for(SharedTicketInfo aticket : this.ticketList) {
+            CustomerInfo ci = getCustomer(this.customerList, aticket.customerName());
+            
+            if(ci != null) {
+                if(aticket.getCustomerName().startsWith(query) || ci.getSearchkey().startsWith(query))
+                    results.add(aticket);
+            }
+        }
+
+        m_jtickets.removeAll();
+
+        for(SharedTicketInfo aticket : results) {
+            m_jtickets.add(new JButtonTicket(aticket));
+        }
+        
+        m_jtickets.updateUI();
+    }
+    
+    public CustomerInfo getCustomer(List<CustomerInfo> customers, String name) {
+        for(CustomerInfo ci : customers) {
+            if(ci.getName().equals(name))
+                return ci;
+        }
+        return null;
     }
     
     public static JTicketsBagMergeList newJDialog(JTicketsBagShared ticketsbagshared) {
@@ -116,6 +156,8 @@ public class JTicketsBagMergeList extends javax.swing.JDialog {
         jPanel4 = new javax.swing.JPanel();
         m_jButtonMerge1 = new javax.swing.JButton();
         m_jButtonCancel1 = new javax.swing.JButton();
+        jPanel5 = new javax.swing.JPanel();
+        jTextField1 = new javax.swing.JTextField();
 
         setTitle("Merge Tickets");
         setPreferredSize(new java.awt.Dimension(400, 350));
@@ -171,6 +213,25 @@ public class JTicketsBagMergeList extends javax.swing.JDialog {
 
         getContentPane().add(jPanel3, java.awt.BorderLayout.SOUTH);
 
+        jPanel5.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        jPanel5.setMinimumSize(new java.awt.Dimension(33, 33));
+        jPanel5.setLayout(new java.awt.BorderLayout(5, 5));
+
+        jTextField1.setMargin(new java.awt.Insets(5, 5, 5, 5));
+        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField1ActionPerformed(evt);
+            }
+        });
+        jTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTextField1KeyReleased(evt);
+            }
+        });
+        jPanel5.add(jTextField1, java.awt.BorderLayout.CENTER);
+
+        getContentPane().add(jPanel5, java.awt.BorderLayout.PAGE_START);
+
         setSize(new java.awt.Dimension(416, 389));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
@@ -208,8 +269,25 @@ public class JTicketsBagMergeList extends javax.swing.JDialog {
             }
         }
         
+        jTextField1.setText("");
         JTicketsBagMergeList.this.setVisible(false);
     }//GEN-LAST:event_m_jButtonMerge1ActionPerformed
+
+    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField1ActionPerformed
+
+    private void jTextField1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyReleased
+        if(jTextField1.getText().length() < 1) {
+            m_jtickets.removeAll();
+            for(SharedTicketInfo aticket : this.ticketList) {
+                m_jtickets.add(new JButtonTicket(aticket));
+            }
+            m_jtickets.updateUI();
+        }
+        else
+            updateTicketsList();
+    }//GEN-LAST:event_jTextField1KeyReleased
 
     private class JButtonTicket extends JButton {
         
@@ -258,7 +336,9 @@ public class JTicketsBagMergeList extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextField jTextField1;
     private javax.swing.JButton m_jButtonCancel1;
     private javax.swing.JButton m_jButtonMerge1;
     private javax.swing.JPanel m_jtickets;
