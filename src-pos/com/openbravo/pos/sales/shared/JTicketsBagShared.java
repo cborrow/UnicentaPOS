@@ -21,6 +21,10 @@ package com.openbravo.pos.sales.shared;
 
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.gui.MessageInf;
+import com.openbravo.data.user.ListProvider;
+import com.openbravo.data.user.ListProviderCreator;
+import com.openbravo.pos.customers.CustomerInfo;
+import com.openbravo.pos.customers.DataLogicCustomers;
 import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.forms.AppView;
 import com.openbravo.pos.sales.DataLogicReceipts;
@@ -43,6 +47,8 @@ public class JTicketsBagShared extends JTicketsBag {
     
     private String m_sCurrentTicket = null;
     private DataLogicReceipts dlReceipts = null;
+    private DataLogicCustomers dlCustomers = null;
+    
     
     
     /** Creates new form JTicketsBagShared
@@ -53,6 +59,7 @@ public class JTicketsBagShared extends JTicketsBag {
         super(app, panelticket);
         
         dlReceipts = (DataLogicReceipts) app.getBean("com.openbravo.pos.sales.DataLogicReceipts");
+        dlCustomers = (DataLogicCustomers) app.getBean("com.openbravo.pos.customers.DataLogicCustomers");
         
         initComponents();
     }
@@ -281,11 +288,14 @@ public class JTicketsBagShared extends JTicketsBag {
                 
                 try {
                     List<SharedTicketInfo> l = dlReceipts.getSharedTicketList();
+                    ListProvider lpr = new ListProviderCreator(dlCustomers.getCustomerList());
+                    List<CustomerInfo> customers = lpr.loadData();
+                    
 //                    String itemCount = Integer.toString(l.size());
 //                    m_jListTickets.setText(itemCount);
 //                    m_jListTickets.setIcon(null);
                     JTicketsBagSharedList listDialog = JTicketsBagSharedList.newJDialog(JTicketsBagShared.this);
-                    String id = listDialog.showTicketsList(l); 
+                    String id = listDialog.showTicketsList(l, customers); 
 
                     if (id != null) {
                         saveCurrentTicket();
@@ -323,11 +333,13 @@ public class JTicketsBagShared extends JTicketsBag {
                 
                 try {
                     List<SharedTicketInfo> l = dlReceipts.getSharedTicketList();
+                    ListProvider lpr = new ListProviderCreator(dlCustomers.getCustomerList());
+                    List<CustomerInfo> customers = lpr.loadData();
 //                    String itemCount = Integer.toString(l.size());
 //                    m_jListTickets.setText(itemCount);
 //                    m_jListTickets.setIcon(null);
                     JTicketsBagMergeList listDialog = JTicketsBagMergeList.newJDialog(JTicketsBagShared.this);
-                    String id = listDialog.showTicketsList(dlReceipts, l); 
+                    String id = listDialog.showTicketsList(dlReceipts, l, customers); 
 
                     if (id != null) {
                         saveCurrentTicket();
