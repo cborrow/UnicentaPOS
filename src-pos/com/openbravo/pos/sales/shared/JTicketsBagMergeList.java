@@ -25,6 +25,7 @@ import java.awt.Insets;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -38,6 +39,7 @@ public class JTicketsBagMergeList extends javax.swing.JDialog {
     private String m_sDialogTicket;
     private String m_sPrimaryTicket;
     private String m_sSecondaryTicket;
+    private List<String> selectedTickets;
     private List<SharedTicketInfo> ticketList;
     private List<CustomerInfo> customerList;
     private DataLogicReceipts dlReceipts;
@@ -71,6 +73,7 @@ public class JTicketsBagMergeList extends javax.swing.JDialog {
             m_jtickets.add(new JTicketsBagMergeList.JButtonTicket(aticket));
         }  
        
+        selectedTickets = new ArrayList<String>();
         m_sPrimaryTicket = null;
         m_sSecondaryTicket = null;
         m_sDialogTicket = null;
@@ -81,7 +84,7 @@ public class JTicketsBagMergeList extends javax.swing.JDialog {
     }
     
     public void updateTicketsList() {
-        java.util.List<SharedTicketInfo> results = new java.util.ArrayList<SharedTicketInfo>();
+        java.util.List<SharedTicketInfo> results = new ArrayList<SharedTicketInfo>();
         String query = jTextField1.getText();
 
         for(SharedTicketInfo aticket : this.ticketList) {
@@ -243,23 +246,28 @@ public class JTicketsBagMergeList extends javax.swing.JDialog {
     private void m_jButtonMerge1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_jButtonMerge1ActionPerformed
         TicketInfo tempTicket = null;
         
-        if(m_sPrimaryTicket != null && m_sSecondaryTicket != null) {
+        if(!selectedTickets.isEmpty()) {
             tempTicket = null;
+            int iOldPickupId = -1;
             
             try {
-                TicketInfo t1 = dlReceipts.getSharedTicket(m_sPrimaryTicket);
-                TicketInfo t2 = dlReceipts.getSharedTicket(m_sSecondaryTicket);
-                int iOldPickupId = t1.getPickupId();
-                
-                tempTicket = t1.copyTicket();
-                
-                for(TicketLineInfo line : t2.getLines()) {
-                    tempTicket.addLine(line);
+                for(String id : selectedTickets) {
+                    //TicketInfo t1 = dlReceipts.getSharedTicket(m_sPrimaryTicket);
+                    //TicketInfo t2 = dlReceipts.getSharedTicket(m_sSecondaryTicket);
+                    TicketInfo t = dlReceipts.getSharedTicket(id);
+                    
+                    if(iOldPickupId == -1) {
+                        tempTicket = t.copyTicket();
+                        iOldPickupId = t.getPickupId();
+                    }
+                    else {    
+                        for(TicketLineInfo line : t.getLines()) {
+                            tempTicket.addLine(line);
+                        }
+                    }
+
+                    dlReceipts.deleteSharedTicket(id);
                 }
-                
-                dlReceipts.deleteSharedTicket(m_sPrimaryTicket);
-                dlReceipts.deleteSharedTicket(m_sSecondaryTicket);
-                
                 dlReceipts.insertSharedTicket(tempTicket.getId(), tempTicket, tempTicket.getPickupId());
                 m_sDialogTicket = tempTicket.getId();
                 tempTicket.setPickupId(iOldPickupId);
@@ -292,6 +300,7 @@ public class JTicketsBagMergeList extends javax.swing.JDialog {
     private class JButtonTicket extends JButton {
         
         private final SharedTicketInfo m_Ticket;
+        private boolean selected;
         
         public JButtonTicket(SharedTicketInfo ticket){
             
@@ -320,10 +329,21 @@ public class JTicketsBagMergeList extends javax.swing.JDialog {
             public void actionPerformed(ActionEvent evt) {
                 // Selecciono el ticket
                 
-                if(m_sPrimaryTicket != null)
+                /*if(m_sPrimaryTicket != null)
                     m_sSecondaryTicket = m_Ticket.getId();
                 else
-                    m_sPrimaryTicket = m_Ticket.getId();
+                    m_sPrimaryTicket = m_Ticket.getId();*/
+                
+                if(!selected && !selectedTickets.contains(m_Ticket.getId())) {
+                    selected = true;
+                    setBackground(new java.awt.Color(180, 180, 180));
+                    selectedTickets.add(m_Ticket.getId());
+                }
+                else {
+                    selected = false;
+                    setBackground(new java.awt.Color(220, 220, 220));
+                    selectedTickets.remove(m_Ticket.getId());
+                }
 
                 // y oculto la ventana
                 //JTicketsBagMergeList.this.setVisible(false);
