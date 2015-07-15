@@ -30,9 +30,13 @@ import com.openbravo.format.Formats;
 import com.openbravo.pos.forms.*;
 import com.openbravo.pos.printer.TicketParser;
 import com.openbravo.pos.printer.TicketPrinterException;
+import com.openbravo.pos.sales.DataLogicReceipts;
+import com.openbravo.pos.sales.SharedTicketInfo;
 import com.openbravo.pos.scripting.ScriptEngine;
 import com.openbravo.pos.scripting.ScriptException;
 import com.openbravo.pos.scripting.ScriptFactory;
+import com.openbravo.pos.ticket.TicketInfo;
+import com.openbravo.pos.ticket.TicketLineInfo;
 import java.awt.Dimension;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -41,7 +45,9 @@ import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -58,6 +64,7 @@ public class JPanelCloseMoney extends JPanel implements JPanelView, BeanFactoryA
     
     private AppView m_App;
     private DataLogicSystem m_dlSystem;
+    private DataLogicReceipts m_dlReceipts;
     
     private PaymentsModel m_PaymentsToClose = null;   
     
@@ -90,6 +97,7 @@ public class JPanelCloseMoney extends JPanel implements JPanelView, BeanFactoryA
 //        m_User.getName();  //JG June 2014
         m_App = app;        
         m_dlSystem = (DataLogicSystem) m_App.getBean("com.openbravo.pos.forms.DataLogicSystem");
+        m_dlReceipts = (DataLogicReceipts) m_App.getBean("com.openbravo.pos.sales.DataLogicReceipts");
         m_TTP = new TicketParser(m_App.getDeviceTicket(), m_dlSystem);
 
         m_jTicketTable.setDefaultRenderer(Object.class, new TableRendererBasic(
@@ -268,6 +276,8 @@ public class JPanelCloseMoney extends JPanel implements JPanelView, BeanFactoryA
     private void printPayments(String report) {
         
         String sresource = m_dlSystem.getResourceAsXML(report);
+        TicketInfo combinedTicket = getCombinedTicket();
+        
         if (sresource == null) {
             MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.cannotprintticket"));
             msg.show(this);
@@ -275,7 +285,8 @@ public class JPanelCloseMoney extends JPanel implements JPanelView, BeanFactoryA
             try {
                 ScriptEngine script = ScriptFactory.getScriptEngine(ScriptFactory.VELOCITY);
                 script.put("payments", m_PaymentsToClose);
-                script.put("nosales",result.toString());                
+                script.put("nosales",result.toString());
+                script.put("combined", combinedTicket);
                 m_TTP.printTicket(script.eval(sresource).toString());
 // JG 16 May 2012 use multicatch
             } catch (ScriptException | TicketPrinterException e) {
@@ -283,6 +294,39 @@ public class JPanelCloseMoney extends JPanel implements JPanelView, BeanFactoryA
                 msg.show(this);
             }
         }
+    }
+    
+    private TicketInfo getCombinedTicket() {
+        TicketInfo combinedTicket = new TicketInfo();
+        
+        try {
+            List<SharedTicketInfo> sharedTickets = m_dlReceipts.getSharedTicketList();
+       
+            for(SharedTicketInfo sti : sharedTickets) {
+                TicketInfo ti = m_dlReceipts.getSharedTicket(sti.getId());
+
+                for(TicketLineInfo tli : ti.getLines()) {
+                    boolean foundLine = false;
+                    for(TicketLineInfo ptli : combinedTicket.getLines()) {
+                        if(ptli.getProductID().equals(tli.getProductID())) {
+                            double mult = ptli.getMultiply();
+                            double amult = tli.getMultiply();
+                            ptli.setMultiply((mult + amult));
+                            foundLine = true;
+                        }
+                    }
+
+                    if(foundLine == false) {
+                        combinedTicket.addLine(tli);
+                    }
+                }
+            }
+        }
+        catch(BasicException ex) {
+            
+        }
+        
+        return combinedTicket;
     }
 
     private class FormatsPayment extends Formats {
@@ -298,7 +342,7 @@ public class JPanelCloseMoney extends JPanel implements JPanelView, BeanFactoryA
         public int getAlignment() {
             return javax.swing.SwingConstants.LEFT;
         }         
-    }    
+    }
    
     /** This method is called from within the constructor to
      * initialize the form.
@@ -704,7 +748,8 @@ public class JPanelCloseMoney extends JPanel implements JPanelView, BeanFactoryA
     private void m_jPrintCashTopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_jPrintCashTopActionPerformed
 
         // print report
-        printPayments("Printer.PartialCash");
+        //printPayments("Printer.PartialCash");
+        printPayments("Printer.Pending");
     }//GEN-LAST:event_m_jPrintCashTopActionPerformed
 
     private void m_jCloseCashTopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_jCloseCashTopActionPerformed
