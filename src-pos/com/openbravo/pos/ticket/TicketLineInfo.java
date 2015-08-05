@@ -403,6 +403,13 @@ public class TicketLineInfo implements SerializableWrite, SerializableRead, Seri
         ArrayList range = new ArrayList();
         for(double i = 0; i < this.getMultiply(); i++) {
             range.add(i);
+            
+            /*if(this.printName().toUpperCase().contains("2pc"))
+                range.add(i);
+            else if(this.printName().toUpperCase().contains("3pc")) {
+                range.add(i);
+                range.add(i);
+            }*/
         }
         return range;
     }

@@ -182,10 +182,10 @@ public class JPanelCloseMoney extends JPanel implements JPanelView, BeanFactoryA
         m_jSequence.setText(null);
         m_jMinDate.setText(null);
         m_jMaxDate.setText(null);
-        m_jPrintCash.setEnabled(false);
+        m_jPrintCash.setEnabled(true);
         m_jCloseCash.setEnabled(false);
         
-        m_jPrintCashTop.setEnabled(false);
+        m_jPrintCashTop.setEnabled(true);
         m_jCloseCashTop.setEnabled(false);
         
         m_jCount.setText(null); // AppLocal.getIntString("label.noticketstoclose");
@@ -323,7 +323,8 @@ public class JPanelCloseMoney extends JPanel implements JPanelView, BeanFactoryA
             }
         }
         catch(BasicException ex) {
-            
+            MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, "Could not combine shared tickets.", ex);
+            msg.show(this);
         }
         
         return combinedTicket;
@@ -748,8 +749,8 @@ public class JPanelCloseMoney extends JPanel implements JPanelView, BeanFactoryA
     private void m_jPrintCashTopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_jPrintCashTopActionPerformed
 
         // print report
-        //printPayments("Printer.PartialCash");
-        printPayments("Printer.Pending");
+        printPayments("Printer.PartialCash");
+        //printPayments("Printer.Pending");
     }//GEN-LAST:event_m_jPrintCashTopActionPerformed
 
     private void m_jCloseCashTopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_jCloseCashTopActionPerformed
@@ -863,7 +864,7 @@ public class JPanelCloseMoney extends JPanel implements JPanelView, BeanFactoryA
 
         // print report
         printPayments("Printer.PartialCash");
-
+        //printPayments("Printer.Pending");
     }//GEN-LAST:event_m_jPrintCashActionPerformed
     
     
